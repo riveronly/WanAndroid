@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2022 emo Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="18dp"
+    android:height="18dp"
+    android:viewportWidth="18"
+    android:viewportHeight="18">
+    <path
+        android:fillColor="#FF5A5C7E"
+        android:fillType="evenOdd"
+        android:pathData="M9,18C13.9706,18 18,13.9706 18,9C18,4.0294 13.9706,0 9,0C4.0294,0 0,4.0294 0,9C0,13.9706 4.0294,18 9,18ZM4,8L14,8L14,10L4,10L4,8Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+</vector>

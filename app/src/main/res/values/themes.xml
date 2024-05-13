@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.AppSplashScreen" parent="Theme.SplashScreen.Common">
+        <!--  开屏页面底色-->
+        <item name="windowSplashScreenBackground">@color/purple_40</item>
+        <!-- Splash结束后的主题-->
+        <item name="postSplashScreenTheme">@style/Theme.App</item>
+    </style>
+
+</resources>
