@@ -80,10 +80,9 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.zxing.core)
-    implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.retrofit)
     implementation(libs.coil.compose)
     implementation(libs.mmkv)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.converter.kotlinx.serialization)
 }

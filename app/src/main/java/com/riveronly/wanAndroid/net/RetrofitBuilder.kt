@@ -1,6 +1,5 @@
 package com.riveronly.wanAndroid.net
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.riveronly.wanAndroid.bean.base.BaseResponse
 import com.riveronly.wanAndroid.utils.MMKVUtil
 import kotlinx.serialization.json.Json
@@ -12,8 +11,8 @@ import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
@@ -38,12 +37,9 @@ object RetrofitBuilder {
                 .addInterceptor(ResponseHeaderInterceptor())
                 .addInterceptor(RequestHeaderInterceptor())
                 .addInterceptor(ResponseErrorInterceptor())
-                .addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                })
                 .build()
 
-        val contentType = "application/json".toMediaType()
+        val contentType = "application/json; charset=UTF8".toMediaType()
         val jsonConfig = Json {
             ignoreUnknownKeys = true
             encodeDefaults = true
