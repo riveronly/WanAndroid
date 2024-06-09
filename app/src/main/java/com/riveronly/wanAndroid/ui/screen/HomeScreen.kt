@@ -2,7 +2,8 @@ package com.riveronly.wanAndroid.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
+import com.riveronly.wanAndroid.ScreenActivity
 import com.riveronly.wanAndroid.bean.ArticleListBean
 import com.riveronly.wanAndroid.bean.BannerBeanItem
 import com.riveronly.wanAndroid.net.ApiService
@@ -66,6 +68,9 @@ fun HomeScreen() {
     val listState = rememberLazyListState()
     val targetHeight = if (listState.canScrollBackward) 100.dp else 180.dp
     val animatedHeight by animateDpAsState(targetValue = targetHeight, label = "")
+    val startActivityLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {}
 
     LaunchedEffect("HomeScreen") {
         //banner图片列表
@@ -103,8 +108,12 @@ fun HomeScreen() {
         ) {
             items(items = articleListBean.value.datas) { item ->
                 Item(title = item.title, detail = item.niceDate, onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
-                    view.context.startActivity(intent)
+                    val intent = Intent(view.context, ScreenActivity::class.java)
+                    intent.putExtra("startDestination", "WebViewScreen")
+                    intent.putExtra("webViewUrl", item.link)
+                    startActivityLauncher.launch(intent)
+//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
+//                    view.context.startActivity(intent)
                 })
             }
         }

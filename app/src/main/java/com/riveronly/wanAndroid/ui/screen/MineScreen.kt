@@ -122,12 +122,13 @@ fun MineScreen() {
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 1f))
                 .clickable {
                     val intent = Intent(context, ScreenActivity::class.java)
+                    intent.putExtra("startDestination", "LoginScreen")
                     startActivityLauncher.launch(intent)
                 }
         ) {
             RoundImage(R.drawable.icon)
             Text(
-                text = userInfoState.value.nickname ?: "点击登录",
+                text = userInfoState.value.nickname.takeIf { it.isNotEmpty() } ?: "点击登录",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold

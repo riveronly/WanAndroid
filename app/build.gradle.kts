@@ -85,4 +85,5 @@ dependencies {
     implementation(libs.mmkv)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.converter.kotlinx.serialization)
+    implementation (libs.compose.webview)
 }
