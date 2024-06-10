@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
+    alias(libs.plugins.jetbrainsKotlinCompose)
+    alias(libs.plugins.jetbrainsKotlinSerialization)
 }
 
 android {
@@ -81,9 +82,9 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.zxing.core)
     implementation(libs.retrofit)
+    implementation(libs.retrofit.serialization)
     implementation(libs.coil.compose)
     implementation(libs.mmkv)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.converter.kotlinx.serialization)
     implementation (libs.compose.webview)
 }
