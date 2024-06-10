@@ -1,6 +1,7 @@
 package com.riveronly.wanAndroid.ui.screen
 
 import android.app.Activity
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ fun WebViewScreen(webViewUrl: String = "") {
     val navigator = rememberWebViewNavigator()
     val activity = (LocalContext.current as? Activity)
     val loadingState = state.loadingState
+
     Column {
         TopAppBar(
             title = {
@@ -58,6 +60,9 @@ fun WebViewScreen(webViewUrl: String = "") {
             )
         }
         WebView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
             state = state,
             navigator = navigator
         )
