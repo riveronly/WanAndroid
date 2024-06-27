@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 enum class Tab(val title: String, val icon: ImageVector, val isUsing: Boolean = true) {
     Home("首页", Icons.Rounded.Home),
-    Scan("扫码", Icons.Rounded.Info),
+    Scan("扫码", Icons.Rounded.Info, false),
     Me("我的", Icons.Rounded.Person),
 }
 
