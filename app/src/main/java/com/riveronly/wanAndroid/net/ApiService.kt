@@ -25,7 +25,7 @@ interface ApiService {
     suspend fun register(
         @Field("username") username: String,
         @Field("password") password: String,
-        @Field("repassword") repassword: String
+        @Field("repassword") rePassword: String
     ): BaseResponse<RegisterBean>
 
     @GET("/lg/coin/userinfo/json")
