@@ -14,6 +14,7 @@ class ScreenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val startDestination = intent.getStringExtra("startDestination") ?: ""
         val webViewUrl = intent.getStringExtra("webViewUrl") ?: ""
+        val webViewTitle = intent.getStringExtra("webViewTitle") ?: ""
         setContent {
             val navController = rememberNavController()
             NavHost(
@@ -28,7 +29,7 @@ class ScreenActivity : ComponentActivity() {
                 composable(
                     route = "WebViewScreen",
                 ) {
-                    WebViewScreen(webViewUrl)
+                    WebViewScreen(webViewUrl, webViewTitle)
                 }
             }
         }

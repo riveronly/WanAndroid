@@ -23,45 +23,39 @@ import com.kevinnzou.web.rememberWebViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WebViewScreen(webViewUrl: String = "") {
+fun WebViewScreen(webViewUrl: String = "", webViewTitle: String = "") {
     val state = rememberWebViewState(webViewUrl)
     val navigator = rememberWebViewNavigator()
     val activity = (LocalContext.current as? Activity)
     val loadingState = state.loadingState
 
     Column {
-        TopAppBar(
-            title = {
-                Text(
-                    text = state.pageTitle ?: "",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    if (navigator.canGoBack) {
-                        navigator.navigateBack()
-                    } else {
-                        activity?.finish()
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
+        TopAppBar(title = {
+            Text(
+                text = webViewTitle, maxLines = 1, overflow = TextOverflow.Ellipsis
+            )
+        }, navigationIcon = {
+            IconButton(onClick = {
+                if (navigator.canGoBack) {
+                    navigator.navigateBack()
+                } else {
+                    activity?.finish()
                 }
+            }) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
             }
-        )
+        })
         if (loadingState is LoadingState.Loading) {
             LinearProgressIndicator(
-                progress = { loadingState.progress },
-                modifier = Modifier.fillMaxWidth()
+                progress = { loadingState.progress }, modifier = Modifier.fillMaxWidth()
             )
         }
         WebView(
             modifier = Modifier
-                .fillMaxWidth()
+                .weight(1f)
                 .animateContentSize(),
             state = state,
             navigator = navigator

@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -66,8 +64,6 @@ fun HomeScreen() {
     val articleListBean = remember { mutableStateOf(ArticleListBean()) }
 
     val listState = rememberLazyListState()
-    val targetHeight = if (listState.canScrollBackward) 100.dp else 180.dp
-    val animatedHeight by animateDpAsState(targetValue = targetHeight, label = "")
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
@@ -93,23 +89,19 @@ fun HomeScreen() {
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xfff5f5f5)),
     ) {
-        Box(
-            modifier = Modifier
-                .height(animatedHeight)
-                .animateContentSize()
-        ) {
-            Carousel(imgList.value)
-        }
-
+        Carousel(imgList.value)
         LazyColumn(
             state = listState, modifier = Modifier.fillMaxSize()
         ) {
             items(items = articleListBean.value.datas) { item ->
-                Item(title = item.title, detail = item.niceDate, onClick = {
+                Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
                     val intent = Intent(view.context, ScreenActivity::class.java)
                     intent.putExtra("startDestination", "WebViewScreen")
+                    intent.putExtra("webViewTitle", item.title)
                     intent.putExtra("webViewUrl", item.link)
                     startActivityLauncher.launch(intent)
 //                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
@@ -144,7 +136,7 @@ fun Carousel(imgList: List<BannerBeanItem>) {
             //不让一个图最宽，留空可以一个页面渲染出多个图
             contentPadding = PaddingValues(horizontal = 10.dp),
             modifier = Modifier
-                .height(180.dp)
+                .height(150.dp)
                 .padding(top = 10.dp),
             beyondBoundsPageCount = imgList.size
         ) { index ->
