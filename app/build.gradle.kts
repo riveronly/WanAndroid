@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.riveronly.wanAndroid"
+    namespace = "com.riveronly.wanandroid"
     compileSdk = 34
 
     defaultConfig {
