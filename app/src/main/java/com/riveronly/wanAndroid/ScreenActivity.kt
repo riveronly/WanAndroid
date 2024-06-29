@@ -3,33 +3,32 @@ package com.riveronly.wanAndroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.riveronly.wanAndroid.ui.screen.LoginScreen
 import com.riveronly.wanAndroid.ui.screen.WebViewScreen
+import com.riveronly.wanAndroid.ui.theme.WanAndroidTheme
 
 class ScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         val startDestination = intent.getStringExtra("startDestination") ?: ""
         val webViewUrl = intent.getStringExtra("webViewUrl") ?: ""
         val webViewTitle = intent.getStringExtra("webViewTitle") ?: ""
         setContent {
-            val navController = rememberNavController()
-            NavHost(
-                navController = navController,
-                startDestination = startDestination,
-            ) {
-                composable(
-                    route = "LoginScreen",
+            WanAndroidTheme {
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = startDestination,
                 ) {
-                    LoginScreen(navController)
-                }
-                composable(
-                    route = "WebViewScreen",
-                ) {
-                    WebViewScreen(webViewUrl, webViewTitle)
+                    composable(
+                        route = "WebViewScreen",
+                    ) {
+                        WebViewScreen(webViewUrl, webViewTitle)
+                    }
                 }
             }
         }

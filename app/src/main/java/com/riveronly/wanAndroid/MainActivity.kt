@@ -3,6 +3,7 @@ package com.riveronly.wanAndroid
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,6 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -27,6 +27,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.riveronly.wanAndroid.ui.screen.HomeScreen
 import com.riveronly.wanAndroid.ui.screen.MineScreen
 import com.riveronly.wanAndroid.ui.screen.QRScanScreen
+import com.riveronly.wanAndroid.ui.theme.WanAndroidTheme
 import kotlinx.coroutines.launch
 
 enum class Tab(val title: String, val icon: ImageVector, val isUsing: Boolean = true) {
@@ -39,9 +40,10 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            WanAndroidTheme {
                 val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
                 val nowPageIndex = pagerState.currentPage
                 val scope = rememberCoroutineScope()

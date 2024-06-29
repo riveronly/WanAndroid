@@ -1,18 +1,25 @@
-package com.riveronly.wanAndroid.ui.screen
+package com.riveronly.wanAndroid
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -23,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,10 +38,37 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.riveronly.wanAndroid.ui.modal.toast
+import com.riveronly.wanAndroid.ui.theme.WanAndroidTheme
 import com.riveronly.wanAndroid.utils.MMKVUtil
+
 
 const val ClickLogin = "ClickLogin"
 const val ClickLogout = "ClickLogout"
+
+class LoginActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        overrideActivityTransition(
+            OVERRIDE_TRANSITION_OPEN,
+            R.anim.bottom_to_top,
+            R.anim.light_to_dark
+        )
+        overrideActivityTransition(
+            OVERRIDE_TRANSITION_CLOSE,
+            R.anim.dark_to_light,
+            R.anim.top_to_bottom
+        )
+
+        setContent {
+            WanAndroidTheme {
+                LoginScreen()
+            }
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +94,7 @@ fun LoginScreen(navController: NavController? = null) {
                 activity?.finish()
             }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    imageVector = Icons.Rounded.Close,
                     contentDescription = "Back"
                 )
             }
@@ -70,7 +103,7 @@ fun LoginScreen(navController: NavController? = null) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(Color(0xfff5f5f5))
+                .background(MaterialTheme.colorScheme.surfaceContainer)
                 .weight(1f)
                 .fillMaxSize()
                 .padding(top = 50.dp)

@@ -27,7 +27,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.riveronly.wanAndroid.ScreenActivity
+import com.riveronly.wanAndroid.ClickLogin
+import com.riveronly.wanAndroid.ClickLogout
+import com.riveronly.wanAndroid.LoginActivity
 import com.riveronly.wanAndroid.bean.LoginBean
 import com.riveronly.wanAndroid.net.ApiService
 import com.riveronly.wanAndroid.ui.modal.loadingModal
@@ -88,15 +90,15 @@ fun MineScreen() {
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xfff5f5f5))) {
+        .background(MaterialTheme.colorScheme.surfaceContainer)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primary)
                 .fillMaxWidth()
                 .height(100.dp)
                 .clickable {
-                    val intent = Intent(context, ScreenActivity::class.java)
-                    intent.putExtra("startDestination", "LoginScreen")
+                    val intent = Intent(context, LoginActivity::class.java)
                     startActivityLauncher.launch(intent)
                 }
                 .padding(10.dp)
