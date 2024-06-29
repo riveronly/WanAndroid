@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "wanAndroid"
+rootProject.name = "wanandroid"
 include(":app")
