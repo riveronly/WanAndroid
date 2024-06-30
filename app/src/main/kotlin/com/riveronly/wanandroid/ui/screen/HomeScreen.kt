@@ -92,7 +92,6 @@ fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceContainer),
     ) {
         Carousel(imgList.value)
         LazyColumn(

@@ -102,8 +102,6 @@ fun LoginScreen(navController: NavController? = null) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-                .weight(1f)
                 .fillMaxSize()
                 .padding(top = 50.dp)
         ) {

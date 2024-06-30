@@ -90,7 +90,6 @@ fun MineScreen() {
 
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
