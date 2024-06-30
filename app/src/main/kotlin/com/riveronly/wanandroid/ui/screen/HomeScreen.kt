@@ -8,6 +8,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -61,6 +62,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen() {
     val view = LocalView.current
     val loadingView = view.loadingModal()
+    val scope = rememberCoroutineScope()
     val imgList = remember { mutableStateOf(ArrayList<BannerBeanItem>()) }
     val articleListBean = remember { mutableStateOf(ArticleListBean()) }
 
@@ -69,7 +71,7 @@ fun HomeScreen() {
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
 
-    LaunchedEffect("HomeScreen") {
+    suspend fun fetchApi() {
         //banner图片列表
         loadingView.show()
         val banner = ApiService.banner()
@@ -89,24 +91,42 @@ fun HomeScreen() {
             view.toast(articleList.errorMsg)
         }
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Carousel(imgList.value)
-        LazyColumn(
-            state = listState, modifier = Modifier.fillMaxSize()
+    LaunchedEffect(Unit) {
+        fetchApi()
+    }
+    if (articleListBean.value.datas.isEmpty()) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable {
+                    scope.launch {
+                        fetchApi()
+                    }
+                }
         ) {
-            items(items = articleListBean.value.datas) { item ->
-                Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
-                    val intent = Intent(view.context, ScreenActivity::class.java)
-                    intent.putExtra("startDestination", "WebViewScreen")
-                    intent.putExtra("webViewTitle", item.title)
-                    intent.putExtra("webViewUrl", item.link)
-                    startActivityLauncher.launch(intent)
+            Text("点击重试")
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Carousel(imgList.value)
+            LazyColumn(
+                state = listState, modifier = Modifier.fillMaxSize()
+            ) {
+                items(items = articleListBean.value.datas) { item ->
+                    Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
+                        val intent = Intent(view.context, ScreenActivity::class.java)
+                        intent.putExtra("startDestination", "WebViewScreen")
+                        intent.putExtra("webViewTitle", item.title)
+                        intent.putExtra("webViewUrl", item.link)
+                        startActivityLauncher.launch(intent)
 //                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
 //                    view.context.startActivity(intent)
-                })
+                    })
+                }
             }
         }
     }

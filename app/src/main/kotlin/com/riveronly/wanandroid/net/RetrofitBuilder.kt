@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit
 object RetrofitBuilder {
 
     private const val BASE_URL = "https://www.wanandroid.com"
-    private const val CONNECT_TIMEOUT_SECONDS = 15L // 连接超时时间
-    private const val READ_TIMEOUT_SECONDS = 15L // 读取超时时间
+    private const val CONNECT_TIMEOUT_SECONDS = 10L // 连接超时时间
+    private const val READ_TIMEOUT_SECONDS = 10L // 读取超时时间
 
     private val retrofit by lazy { initRetrofit() }
     val service: ApiService by lazy { retrofit.create(ApiService::class.java) }
