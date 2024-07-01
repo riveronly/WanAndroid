@@ -29,7 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -137,7 +137,7 @@ private fun AnimatedVisibilityScope.NestScrollWrapper(
     content: @Composable () -> Unit
 ) {
     val yOffsetState = remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
 
     val mutableContentHeight = remember {
@@ -146,7 +146,7 @@ private fun AnimatedVisibilityScope.NestScrollWrapper(
     val contentHeight = mutableContentHeight.height
 
     val percent = if (contentHeight <= 0f) 1f else {
-        ((contentHeight - yOffsetState.value) / contentHeight)
+        ((contentHeight - yOffsetState.floatValue) / contentHeight)
             .coerceAtMost(1f)
             .coerceAtLeast(0f)
     }
@@ -155,7 +155,7 @@ private fun AnimatedVisibilityScope.NestScrollWrapper(
         BottomSheetNestedScrollConnection(modal, yOffsetState, mutableContentHeight)
     }
 
-    val yOffset = yOffsetState.value
+    val yOffset = yOffsetState.floatValue
 
     Box(
         modifier = Modifier.fillMaxSize(),

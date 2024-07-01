@@ -1,4 +1,4 @@
-package com.riveronly.wanandroid
+package com.riveronly.wanandroid.ui.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,6 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import com.riveronly.wanandroid.utils.MMKVUtil
@@ -84,20 +83,23 @@ fun LoginScreen(navController: NavController? = null) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TopAppBar(title = {
-            Text(
-                text = "", maxLines = 1, overflow = TextOverflow.Ellipsis
-            )
-        }, navigationIcon = {
-            IconButton(onClick = {
-                activity?.finish()
-            }) {
-                Icon(
-                    imageVector = Icons.Rounded.Close,
-                    contentDescription = "Back"
+        TopAppBar(
+            title = {
+                Text(
+                    text = "", maxLines = 1, overflow = TextOverflow.Ellipsis
                 )
-            }
-        })
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    activity?.finish()
+                }) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+        )
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

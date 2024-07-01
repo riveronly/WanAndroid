@@ -50,9 +50,7 @@ fun Item(
     background: Color = Color.Transparent,
     indication: Indication = rememberRipple(),
     titleTextStyle: TextStyle = DefaultItemTitleTextStyle,
-    titleTextColor: Color = Color.Black,
     detailTextStyle: TextStyle = DefaultItemDetailTextStyle,
-    detailTextColor: Color = Color.DarkGray,
     minHeight: Dp = 56.dp,
     paddingHor: Dp = 20.dp,
     paddingVer: Dp = 12.dp,
@@ -88,16 +86,15 @@ fun Item(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = titleTextColor,
                 modifier = Modifier.fillMaxWidth(),
                 style = titleTextStyle
             )
             if (detail.isNotBlank()) {
                 Text(
                     text = detail,
-                    color = detailTextColor,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .alpha(0.5f)
                         .padding(top = gapBetweenTitleAndDetail),
                     style = detailTextStyle
                 )

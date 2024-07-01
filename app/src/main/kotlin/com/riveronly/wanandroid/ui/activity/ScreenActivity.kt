@@ -1,4 +1,4 @@
-package com.riveronly.wanandroid
+package com.riveronly.wanandroid.ui.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

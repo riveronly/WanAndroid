@@ -29,8 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ScreenActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".ui.activity.ScreenActivity" />
+        <activity android:name=".ui.activity.LoginActivity" />
     </application>
 
 </manifest>

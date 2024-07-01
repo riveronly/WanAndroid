@@ -46,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
-import com.riveronly.wanandroid.ScreenActivity
 import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.bean.BannerBeanItem
 import com.riveronly.wanandroid.net.ApiService
+import com.riveronly.wanandroid.ui.activity.ScreenActivity
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast

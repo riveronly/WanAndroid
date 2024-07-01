@@ -175,7 +175,6 @@ fun EmoDialogMarkList(
                 title = item,
                 indication = itemIndication,
                 titleTextStyle = itemTextStyle,
-                titleTextColor = itemTextColor,
                 accessory = {
                     if (markIndex == index) {
                         Image(
@@ -221,7 +220,6 @@ fun EmoDialogMultiCheckList(
                 title = item,
                 indication = itemIndication,
                 titleTextStyle = itemTextStyle,
-                titleTextColor = itemTextColor,
                 alpha = if (isDisabled) disableAlpha else 1f,
                 accessory = {
                     if (checked.contains(index)) {
