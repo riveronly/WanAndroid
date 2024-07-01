@@ -36,6 +36,8 @@ class MainViewModel : ViewModel() {
                 userInfoRes = login.data
                 isLogin = true
                 fetchCoin()
+            } else {
+                fetchLogout()
             }
         }
     }
@@ -46,6 +48,7 @@ class MainViewModel : ViewModel() {
     suspend fun fetchLogout() {
         val logout = ApiService.logout()
         userInfoRes = LoginBean()
+        coinRes = CoinBean()
         isLogin = false
     }
 

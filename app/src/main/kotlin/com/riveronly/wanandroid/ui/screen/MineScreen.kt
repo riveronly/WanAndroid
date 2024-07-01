@@ -32,8 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.ui.activity.ClickLogin
-import com.riveronly.wanandroid.ui.activity.ClickLogout
 import com.riveronly.wanandroid.ui.activity.LoginActivity
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
@@ -55,23 +53,12 @@ fun MineScreen() {
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val clickLogin = result.data?.getBooleanExtra(ClickLogin, false) ?: false
-            val clickLogout = result.data?.getBooleanExtra(ClickLogout, false) ?: false
-            if (clickLogin) {
-                val username = MMKVUtil.getString("username")
-                val password = MMKVUtil.getString("password")
-                if (username.isNotBlank() && password.isNotBlank()) {
-                    scope.launch {
-                        loadingView.show()
-                        viewModel.fetchLogin(username, password)
-                        loadingView.dismiss()
-                    }
-                }
-            }
-            if (clickLogout) {
+            val username = MMKVUtil.getString("username")
+            val password = MMKVUtil.getString("password")
+            if (username.isNotBlank() && password.isNotBlank()) {
                 scope.launch {
                     loadingView.show()
-                    viewModel.fetchLogout()
+                    viewModel.fetchLogin(username, password)
                     loadingView.dismiss()
                 }
             }
@@ -87,8 +74,10 @@ fun MineScreen() {
                 .height(100.dp)
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable {
-                    val intent = Intent(context, LoginActivity::class.java)
-                    startActivityLauncher.launch(intent)
+                    if (!viewModel.isLogin) {
+                        val intent = Intent(context, LoginActivity::class.java)
+                        startActivityLauncher.launch(intent)
+                    }
                 }
                 .padding(10.dp)) {
             Text(text = viewModel.userInfoRes.nickname.takeIf { viewModel.isLogin } ?: "请登录",
@@ -110,6 +99,13 @@ fun MineScreen() {
             Item(title = "稍后阅读", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "关于作者", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {})
+            Item(title = "退出登录", accessory = { ArrowRightIcon() }, onClick = {
+                scope.launch {
+                    loadingView.show()
+                    viewModel.fetchLogout()
+                    loadingView.dismiss()
+                }
+            })
         }
     }
 }
