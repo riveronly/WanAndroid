@@ -16,6 +16,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
+    const val LOCAL_TOKEN = "LOCAL_TOKEN" // token KV名
 
     private const val BASE_URL = "https://www.wanandroid.com"
     private const val CONNECT_TIMEOUT_SECONDS = 10L // 连接超时时间
@@ -57,7 +58,7 @@ object RetrofitBuilder {
     class RequestHeaderInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder()
-            MMKVUtil.getStringSet("cookies")?.forEach { cookie ->
+            MMKVUtil.getStringSet(LOCAL_TOKEN)?.forEach { cookie ->
                 request.addHeader("Cookie", cookie)
             }
             return chain.proceed(request.build())
@@ -70,8 +71,12 @@ object RetrofitBuilder {
     class ResponseHeaderInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val originalResponse = chain.proceed(chain.request())
-            val cookies = originalResponse.headers("Set-Cookie").toSet()
-            MMKVUtil.put("cookies", cookies)
+            val requestUrl = chain.request().url.toString()
+            val loginApiPath = "/user/login"
+            if (requestUrl.contains(loginApiPath)) {
+                val cookieSet = originalResponse.headers("Set-Cookie").toSet()
+                MMKVUtil.put(LOCAL_TOKEN, cookieSet)
+            }
             return originalResponse
         }
     }

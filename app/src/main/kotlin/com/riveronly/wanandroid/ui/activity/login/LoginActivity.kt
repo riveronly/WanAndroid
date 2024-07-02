@@ -1,12 +1,12 @@
-package com.riveronly.wanandroid.ui.activity
+package com.riveronly.wanandroid.ui.activity.login
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,12 +35,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.riveronly.wanandroid.R
+import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
-import com.riveronly.wanandroid.utils.MMKVUtil
+import kotlinx.coroutines.launch
 
 
 class LoginActivity : ComponentActivity() {
+    private val viewModel: LoginViewModel by viewModels()
+
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,11 +63,11 @@ class LoginActivity : ComponentActivity() {
         setContent {
             WanAndroidTheme {
                 val view = LocalView.current
-                val usernameCache = MMKVUtil.getString("username")
-                val passwordCache = MMKVUtil.getString("password")
+                val loadingView = view.loadingModal()
+                val scope = rememberCoroutineScope()
                 // 用于记住用户名和密码的状态
-                var username by remember { mutableStateOf(usernameCache) }
-                var password by remember { mutableStateOf(passwordCache) }
+                var username by remember { mutableStateOf("") }
+                var password by remember { mutableStateOf("") }
                 val activity = (LocalContext.current as? Activity)
 
                 Column(
@@ -118,11 +122,16 @@ class LoginActivity : ComponentActivity() {
                                 view.toast("请输入用户名和密码")
                                 return@Button
                             }
-                            MMKVUtil.put("username", username)
-                            MMKVUtil.put("password", password)
-                            val intent = Intent()
-                            activity?.setResult(RESULT_OK, intent)
-                            activity?.finish()
+                            scope.launch {
+                                loadingView.show()
+                                viewModel.fetchLogin(username, password)
+                                loadingView.dismiss()
+                                if (viewModel.isLogin) {
+                                    activity?.finish()
+                                } else {
+                                    view.toast("登录失败")
+                                }
+                            }
                         }) {
                             Text("登录")
                         }

@@ -1,7 +1,6 @@
 package com.riveronly.wanandroid.ui.screen
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,10 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.ui.activity.LoginActivity
+import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
-import com.riveronly.wanandroid.utils.MMKVUtil
+import com.riveronly.wanandroid.utils.LifecycleEffect
 import kotlinx.coroutines.launch
 
 /**
@@ -51,19 +50,14 @@ fun MineScreen() {
     val loadingView = view.loadingModal()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val username = MMKVUtil.getString("username")
-            val password = MMKVUtil.getString("password")
-            if (username.isNotBlank() && password.isNotBlank()) {
-                scope.launch {
-                    loadingView.show()
-                    viewModel.fetchLogin(username, password)
-                    loadingView.dismiss()
-                }
-            }
+    ) {}
+
+    LifecycleEffect(onResume = {
+        scope.launch {
+            viewModel.fetchUserinfo()
+            viewModel.fetchCoin()
         }
-    }
+    })
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -74,13 +68,14 @@ fun MineScreen() {
                 .height(100.dp)
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable {
-                    if (!viewModel.isLogin) {
+                    if (viewModel.userInfoRes.userInfo.id == 0) {
                         val intent = Intent(context, LoginActivity::class.java)
                         startActivityLauncher.launch(intent)
                     }
                 }
                 .padding(10.dp)) {
-            Text(text = viewModel.userInfoRes.nickname.takeIf { viewModel.isLogin } ?: "请登录",
+            Text(text = viewModel.userInfoRes.userInfo.nickname.takeIf { it.isNotBlank() }
+                ?: "请登录",
                 fontSize = 20.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold)
@@ -92,20 +87,22 @@ fun MineScreen() {
         ) {
             Item(
                 title = "我的积分",
-                accessory = { Text(text = "${viewModel.coinRes.coinCount}") },
+                accessory = { Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}") },
                 onClick = {})
             Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "稍后阅读", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "关于作者", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {})
-            Item(title = "退出登录", accessory = { ArrowRightIcon() }, onClick = {
-                scope.launch {
-                    loadingView.show()
-                    viewModel.fetchLogout()
-                    loadingView.dismiss()
-                }
-            })
+            if (viewModel.userInfoRes.userInfo.id != 0) {
+                Item(title = "退出登录", accessory = { ArrowRightIcon() }, onClick = {
+                    scope.launch {
+                        loadingView.show()
+                        viewModel.fetchLogout()
+                        loadingView.dismiss()
+                    }
+                })
+            }
         }
     }
 }

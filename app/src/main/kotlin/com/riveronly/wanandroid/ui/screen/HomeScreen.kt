@@ -47,7 +47,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.riveronly.wanandroid.bean.ArticleListBean
-import com.riveronly.wanandroid.bean.BannerBeanItem
+import com.riveronly.wanandroid.bean.BannerItemBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.ScreenActivity
 import com.riveronly.wanandroid.ui.modal.Item
@@ -63,7 +63,7 @@ fun HomeScreen() {
     val view = LocalView.current
     val loadingView = view.loadingModal()
     val scope = rememberCoroutineScope()
-    val imgList = remember { mutableStateOf(ArrayList<BannerBeanItem>()) }
+    val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
     val articleListBean = remember { mutableStateOf(ArticleListBean()) }
 
     val listState = rememberLazyListState()
@@ -134,7 +134,7 @@ fun HomeScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Carousel(imgList: List<BannerBeanItem>) {
+fun Carousel(imgList: List<BannerItemBean>) {
     //HorizontalPager的状态
     val pagerState = rememberPagerState(pageCount = { imgList.size })
     //当前滚动到了哪哪一个页面

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Keep
 @Serializable
-data class BannerBeanItem(
+data class BannerItemBean(
     val desc: String = "",
     val id: Int = 0,
     val imagePath: String = "",
