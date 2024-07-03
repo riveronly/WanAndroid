@@ -8,6 +8,7 @@ import com.riveronly.wanandroid.bean.UserInfoBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.utils.MMKVUtil
+import kotlinx.coroutines.flow.flow
 
 class MainViewModel : ViewModel() {
     var userInfoRes by mutableStateOf(UserInfoBean())
@@ -24,8 +25,9 @@ class MainViewModel : ViewModel() {
     /**
      * 签到
      */
-    suspend fun fetchCoin() {
-        ApiService.coin()
+    suspend fun fetchCoin() = flow {
+        val coinRes = ApiService.coin()
+        emit(coinRes.errorCode == 0)
     }
 
     /**

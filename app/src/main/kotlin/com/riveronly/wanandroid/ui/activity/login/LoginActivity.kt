@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -133,16 +134,27 @@ class LoginActivity : ComponentActivity() {
                                 }
                                 scope.launch {
                                     loadingView.show()
-                                    viewModel.fetchLogin(username, password)
-                                    loadingView.dismiss()
-                                    if (viewModel.isLogin) {
-                                        activity?.finish()
-                                    } else {
-                                        view.toast("登录失败")
+                                    viewModel.fetchLogin(username, password).collect {
+                                        loadingView.dismiss()
+                                        if (it) {
+                                            activity?.finish()
+                                        } else {
+                                            view.toast("登录失败")
+                                        }
                                     }
                                 }
                             }) {
                             Text(fontSize = 16.sp, text = "登录")
+                        }
+                        //注册按钮
+                        TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp),
+                            onClick = {
+
+                            }) {
+                            Text(fontSize = 16.sp, text = "没有账号？去注册")
                         }
                     }
                 }

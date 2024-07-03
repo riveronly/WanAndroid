@@ -14,6 +14,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
+    companion object : ApiService by RetrofitBuilder.service
 
     @FormUrlEncoded
     @POST("/user/login")
@@ -44,5 +45,4 @@ interface ApiService {
     @GET("/article/list/{page}/json")
     suspend fun articleList(@Path("page") page: Int): BaseResponse<ArticleListBean>
 
-    companion object : ApiService by RetrofitBuilder.service
 }

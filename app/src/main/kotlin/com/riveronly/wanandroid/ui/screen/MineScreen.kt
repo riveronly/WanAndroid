@@ -39,6 +39,7 @@ import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
+import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.utils.LifecycleEffect
 import com.riveronly.wanandroid.utils.MMKVUtil
 import kotlinx.coroutines.launch
@@ -68,7 +69,11 @@ fun MineScreen() {
                 viewModel.fetchLogout()
             } else {
                 viewModel.fetchUserinfo()
-                viewModel.fetchCoin()
+                viewModel.fetchCoin().collect {
+                    if (it) {
+                        view.toast("签到成功")
+                    }
+                }
             }
         }
     })

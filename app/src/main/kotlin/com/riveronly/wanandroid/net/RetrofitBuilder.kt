@@ -26,8 +26,7 @@ object RetrofitBuilder {
     val service: ApiService by lazy { retrofit.create(ApiService::class.java) }
 
     private fun initRetrofit(): Retrofit {
-        val okHttpClient =
-            OkHttpClient.Builder()
+        val okHttpClient = OkHttpClient.Builder()
                 .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .sslSocketFactory(
@@ -46,7 +45,9 @@ object RetrofitBuilder {
             encodeDefaults = true
             coerceInputValues = true
         }
-        return Retrofit.Builder().baseUrl(BASE_URL).client(okHttpClient)
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(jsonConfig.asConverterFactory(contentType))
             .addCallAdapterFactory(FlowCallAdapterFactory.create())
             .build()
