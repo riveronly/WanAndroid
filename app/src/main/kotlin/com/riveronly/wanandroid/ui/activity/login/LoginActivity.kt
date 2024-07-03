@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
@@ -96,10 +98,12 @@ class LoginActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 50.dp)
+                            .padding(vertical = 50.dp, horizontal = 20.dp)
                     ) {
                         // 用户名输入框
-                        OutlinedTextField(value = username,
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = username,
                             maxLines = 1,
                             singleLine = true,
                             onValueChange = { newValue -> username = newValue },
@@ -107,6 +111,7 @@ class LoginActivity : ComponentActivity() {
 
                         // 密码输入框
                         OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
                             value = password,
                             maxLines = 1,
                             singleLine = true,
@@ -117,23 +122,27 @@ class LoginActivity : ComponentActivity() {
                         )
 
                         // 登录按钮
-                        Button(onClick = {
-                            if (username.isBlank() || password.isBlank()) {
-                                view.toast("请输入用户名和密码")
-                                return@Button
-                            }
-                            scope.launch {
-                                loadingView.show()
-                                viewModel.fetchLogin(username, password)
-                                loadingView.dismiss()
-                                if (viewModel.isLogin) {
-                                    activity?.finish()
-                                } else {
-                                    view.toast("登录失败")
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp),
+                            onClick = {
+                                if (username.isBlank() || password.isBlank()) {
+                                    view.toast("请输入用户名和密码")
+                                    return@Button
                                 }
-                            }
-                        }) {
-                            Text("登录")
+                                scope.launch {
+                                    loadingView.show()
+                                    viewModel.fetchLogin(username, password)
+                                    loadingView.dismiss()
+                                    if (viewModel.isLogin) {
+                                        activity?.finish()
+                                    } else {
+                                        view.toast("登录失败")
+                                    }
+                                }
+                            }) {
+                            Text(fontSize = 16.sp, text = "登录")
                         }
                     }
                 }

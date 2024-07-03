@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,10 +33,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
+import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.activity.login.LoginActivity
+import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
+import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.utils.LifecycleEffect
+import com.riveronly.wanandroid.utils.MMKVUtil
 import kotlinx.coroutines.launch
 
 /**
@@ -48,14 +54,22 @@ fun MineScreen() {
     val view = LocalView.current
     val context = LocalContext.current
     val loadingView = view.loadingModal()
+    val localToken = remember {
+        mutableStateOf(MMKVUtil.getStringSet(LOCAL_TOKEN))
+    }
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
 
     LifecycleEffect(onResume = {
         scope.launch {
-            viewModel.fetchUserinfo()
-            viewModel.fetchCoin()
+            localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+            if (localToken.value.isNullOrEmpty()) {
+                viewModel.fetchLogout()
+            } else {
+                viewModel.fetchUserinfo()
+                viewModel.fetchCoin()
+            }
         }
     })
 
@@ -92,17 +106,11 @@ fun MineScreen() {
             Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {})
             Item(title = "稍后阅读", accessory = { ArrowRightIcon() }, onClick = {})
-            Item(title = "关于作者", accessory = { ArrowRightIcon() }, onClick = {})
-            Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {})
-            if (viewModel.userInfoRes.userInfo.id != 0) {
-                Item(title = "退出登录", accessory = { ArrowRightIcon() }, onClick = {
-                    scope.launch {
-                        loadingView.show()
-                        viewModel.fetchLogout()
-                        loadingView.dismiss()
-                    }
-                })
-            }
+            Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {
+                val intent = Intent(view.context, ScreenActivity::class.java)
+                intent.putExtra(SCREEN_NAME, "SettingScreen")
+                startActivityLauncher.launch(intent)
+            })
         }
     }
 }
