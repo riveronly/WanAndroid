@@ -14,6 +14,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,12 +33,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
-    val webViewTitle: String = articleBean.title
-    val webViewUrl: String = articleBean.link
-    val webViewUrlId: Int = articleBean.id
+    val article = remember { mutableStateOf(articleBean) }
     val view = LocalView.current
     val loadingView = view.loadingModal()
-    val state = rememberWebViewState(webViewUrl)
+    val state = rememberWebViewState(article.value.link)
     val navigator = rememberWebViewNavigator()
     val scope = rememberCoroutineScope()
     val activity = (LocalContext.current as? Activity)
@@ -45,7 +45,7 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
     Column {
         TopAppBar(title = {
             Text(
-                text = webViewTitle, maxLines = 1, overflow = TextOverflow.Ellipsis
+                text = article.value.title, maxLines = 1, overflow = TextOverflow.Ellipsis
             )
         }, navigationIcon = {
             IconButton(onClick = {
@@ -65,11 +65,16 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                 Button(onClick = {
                     scope.launch {
                         loadingView.show()
-                        ApiService.collect(webViewUrlId)
+                        if (article.value.collect) {
+                            ApiService.unCollect(article.value.id)
+                        } else {
+                            ApiService.collect(article.value.id)
+                        }
+                        article.value = article.value.copy(collect = !article.value.collect)
                         loadingView.dismiss()
                     }
                 }) {
-                    Text(text = "收藏")
+                    Text(text = if (article.value.collect) "取消收藏" else "收藏")
                 }
             }
         )
