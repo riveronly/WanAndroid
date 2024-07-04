@@ -2,11 +2,11 @@ package com.riveronly.wanandroid.ui.screen
 
 import android.app.Activity
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,13 +18,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.kevinnzou.web.LoadingState
 import com.kevinnzou.web.WebView
 import com.kevinnzou.web.rememberWebViewNavigator
 import com.kevinnzou.web.rememberWebViewState
+import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.modal.loadingModal
@@ -62,7 +66,7 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
             }
         },
             actions = {
-                Button(onClick = {
+                IconButton(onClick = {
                     scope.launch {
                         loadingView.show()
                         if (article.value.collect) {
@@ -74,7 +78,14 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                         loadingView.dismiss()
                     }
                 }) {
-                    Text(text = if (article.value.collect) "取消收藏" else "收藏")
+                    Image(
+                        painter = painterResource(
+                            id = if (article.value.collect) R.drawable.star_fill_24px
+                            else R.drawable.star_24px
+                        ),
+                        colorFilter = ColorFilter.tint(Color.Black),
+                        contentDescription = ""
+                    )
                 }
             }
         )
