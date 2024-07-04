@@ -55,7 +55,7 @@ interface ApiService {
     suspend fun unCollectInMine(
         @Path("id") id: Int,
         @Field("originId") originId: Int
-    ): BaseResponse<Any>
+    ): BaseResponse<String>
 
     @POST("/lg/uncollect_originId/{id}/json")
     suspend fun unCollect(
