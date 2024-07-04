@@ -9,7 +9,7 @@ data class LoginBean(
     val admin: Boolean = false,
     val chapterTops: List<String> = listOf(),
     val coinCount: Int = 0,
-    val collectIds: List<String> = listOf(),
+    val collectIds: List<Int> = listOf(),
     val email: String = "",
     val icon: String = "",
     val id: Int = 0,

@@ -3,6 +3,7 @@ package com.riveronly.wanandroid.net
 import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.bean.BannerItemBean
 import com.riveronly.wanandroid.bean.CoinBean
+import com.riveronly.wanandroid.bean.CollectBean
 import com.riveronly.wanandroid.bean.LoginBean
 import com.riveronly.wanandroid.bean.RegisterBean
 import com.riveronly.wanandroid.bean.UserInfoBean
@@ -19,7 +20,8 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/user/login")
     suspend fun login(
-        @Field("username") username: String, @Field("password") password: String
+        @Field("username") username: String,
+        @Field("password") password: String
     ): BaseResponse<LoginBean>
 
     @FormUrlEncoded
@@ -45,4 +47,23 @@ interface ApiService {
     @GET("/article/list/{page}/json")
     suspend fun articleList(@Path("page") page: Int): BaseResponse<ArticleListBean>
 
+    @GET("/lg/collect/list/{page}/json")
+    suspend fun collectList(@Path("page") page: Int): BaseResponse<CollectBean>
+
+    @FormUrlEncoded
+    @POST("/lg/uncollect/{id}/json")
+    suspend fun unCollectInMine(
+        @Path("id") id: Int,
+        @Field("originId") originId: Int
+    ): BaseResponse<Any>
+
+    @POST("/lg/uncollect_originId/{id}/json")
+    suspend fun unCollect(
+        @Path("id") id: Int,
+    ): BaseResponse<String>
+
+    @POST("/lg/collect/{id}/json")
+    suspend fun collect(
+        @Path("id") id: Int,
+    ): BaseResponse<String>
 }

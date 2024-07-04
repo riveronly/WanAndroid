@@ -49,16 +49,17 @@ import coil.size.Scale
 import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.bean.BannerItemBean
 import com.riveronly.wanandroid.net.ApiService
+import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
-import com.riveronly.wanandroid.ui.activity.screen.WEB_VIEW_TITLE
-import com.riveronly.wanandroid.ui.activity.screen.WEB_VIEW_URL
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.utils.extend.throttleClick
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @SuppressLint("MutableCollectionMutableState")
 @Composable
@@ -122,12 +123,9 @@ fun HomeScreen() {
                 items(items = articleListBean.value.datas) { item ->
                     Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
                         val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, "WebViewScreen")
-                        intent.putExtra(WEB_VIEW_TITLE, item.title)
-                        intent.putExtra(WEB_VIEW_URL, item.link)
+                        intent.putExtra(SCREEN_NAME, "ArticleWebViewScreen")
+                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
                         startActivityLauncher.launch(intent)
-//                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.link))
-//                    view.context.startActivity(intent)
                     })
                 }
             }
