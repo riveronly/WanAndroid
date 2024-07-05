@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -106,11 +104,11 @@ fun CollectListScreen() {
                                 fetchApi()
                             }
                         }) {
-                            Image(
+                            Icon(
                                 painter = painterResource(
                                     id = R.drawable.star_fill_24px
                                 ),
-                                colorFilter = ColorFilter.tint(Color.Black),
+                                tint = Color.Black,
                                 contentDescription = ""
                             )
                         }

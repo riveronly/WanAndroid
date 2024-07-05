@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,13 +23,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.bean.CollectBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
@@ -40,7 +35,6 @@ import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
-import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -97,24 +91,6 @@ fun ShareListScreen() {
             items(items = collectListRes.value.datas) { item ->
                 Item(title = item.title,
                     detail = item.author + ' ' + item.niceDate,
-                    accessory = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                loadingView.show()
-                                ApiService.unCollectInMine(item.id, item.originId)
-                                loadingView.dismiss()
-                                fetchApi()
-                            }
-                        }) {
-                            Image(
-                                painter = painterResource(
-                                    id = R.drawable.star_fill_24px
-                                ),
-                                colorFilter = ColorFilter.tint(Color.Black),
-                                contentDescription = ""
-                            )
-                        }
-                    },
                     onClick = {
                         val intent = Intent(view.context, ScreenActivity::class.java)
                         intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)

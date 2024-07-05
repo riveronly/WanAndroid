@@ -18,9 +18,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
+import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
@@ -67,7 +69,12 @@ fun SettingScreen() {
         if (!localToken.value.isNullOrEmpty()) {
             Item(
                 title = "退出登录",
-                accessory = { ArrowRightIcon() },
+                accessory = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout_24px),
+                        contentDescription = ""
+                    )
+                },
                 onClick = {
                     scope.launch {
                         loadingView.show()

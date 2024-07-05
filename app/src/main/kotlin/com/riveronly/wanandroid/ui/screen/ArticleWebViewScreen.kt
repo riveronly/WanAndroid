@@ -2,7 +2,6 @@ package com.riveronly.wanandroid.ui.screen
 
 import android.app.Activity
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
@@ -19,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -78,12 +76,12 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                         loadingView.dismiss()
                     }
                 }) {
-                    Image(
+                    Icon(
                         painter = painterResource(
                             id = if (article.value.collect) R.drawable.star_fill_24px
                             else R.drawable.star_24px
                         ),
-                        colorFilter = ColorFilter.tint(Color.Black),
+                        tint = Color.Black,
                         contentDescription = ""
                     )
                 }

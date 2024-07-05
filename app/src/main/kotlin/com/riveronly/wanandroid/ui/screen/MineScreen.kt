@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -95,6 +96,14 @@ fun MineScreen() {
                     }
                 }
                 .padding(10.dp)) {
+            Icon(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(48.dp),
+                painter = painterResource(id = R.drawable.face_24px),
+                contentDescription = "",
+                tint = Color.White
+            )
             Text(text = viewModel.userInfoRes.userInfo.nickname.takeIf { it.isNotBlank() }
                 ?: "请登录",
                 fontSize = 20.sp,
