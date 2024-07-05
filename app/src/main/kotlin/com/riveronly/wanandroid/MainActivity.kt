@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Face
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 enum class Tab(val title: String, val icon: ImageVector, val isUsing: Boolean = true) {
     Home("首页", Icons.Rounded.Home),
     Scan("扫码", Icons.Rounded.Info, false),
-    Me("我的", Icons.Rounded.Person),
+    Mine("我的", Icons.Rounded.Face),
 }
 
 class MainActivity : ComponentActivity() {
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         if (isInitList.value[index] && Tab.entries[index].isUsing) {
                             when (Tab.entries[index]) {
                                 Tab.Home -> HomeScreen()
-                                Tab.Me -> MineScreen()
+                                Tab.Mine -> MineScreen()
                                 Tab.Scan -> QRScanScreen()
                             }
                         } else {
