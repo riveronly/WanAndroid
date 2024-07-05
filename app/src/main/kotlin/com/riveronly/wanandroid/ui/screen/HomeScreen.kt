@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -113,22 +112,19 @@ fun HomeScreen() {
             Text("点击重试")
         }
     } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
+        LazyColumn(
+            state = listState, modifier = Modifier.fillMaxSize()
         ) {
-            Carousel(imgList.value)
-            LazyColumn(
-                state = listState, modifier = Modifier.fillMaxSize()
-            ) {
-                items(items = articleListBean.value.datas) { item ->
-                    Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
-                        val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                        startActivityLauncher.launch(intent)
-                    })
-                }
+            item {
+                Carousel(imgList.value)
+            }
+            items(items = articleListBean.value.datas) { item ->
+                Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
+                    val intent = Intent(view.context, ScreenActivity::class.java)
+                    intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                    intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                    startActivityLauncher.launch(intent)
+                })
             }
         }
     }
