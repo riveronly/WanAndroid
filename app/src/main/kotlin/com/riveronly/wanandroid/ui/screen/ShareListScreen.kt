@@ -47,7 +47,7 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun CollectListScreen() {
+fun ShareListScreen() {
     val view = LocalView.current
     val loadingView = view.loadingModal()
     val scope = rememberCoroutineScope()
@@ -79,7 +79,7 @@ fun CollectListScreen() {
     ) {
         TopAppBar(title = {
             Text(
-                text = "我的收藏", maxLines = 1, overflow = TextOverflow.Ellipsis
+                text = "我的分享", maxLines = 1, overflow = TextOverflow.Ellipsis
             )
         }, navigationIcon = {
             IconButton(onClick = {

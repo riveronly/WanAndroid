@@ -13,41 +13,49 @@ import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.ui.screen.ArticleWebViewScreen
 import com.riveronly.wanandroid.ui.screen.CollectListScreen
 import com.riveronly.wanandroid.ui.screen.SettingScreen
+import com.riveronly.wanandroid.ui.screen.ShareListScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import kotlinx.serialization.json.Json
 
 const val SCREEN_NAME = "screenName"
 const val ARTICLE_BEAN = "articleBean"
 
+enum class Screens(val route: String) {
+    Setting("设置"),
+    ArticleWebView("文章详情"),
+    CollectList("我的收藏"),
+    ShareList("我的分享"),
+}
+
 class ScreenActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val startDestination = intent.getStringExtra(SCREEN_NAME) ?: ""
+        super.onCreate(savedInstanceState)
+
+        val screenName = intent.getStringExtra(SCREEN_NAME) ?: ""
+
         val articleBeanJson = intent.getStringExtra(ARTICLE_BEAN) ?: ""
         val articleBean by lazy { Json.decodeFromString<ArticleListBean.Data>(articleBeanJson) }
+
         setContent {
             WanAndroidTheme {
                 val navController = rememberNavController()
                 NavHost(
                     navController = navController,
-                    startDestination = startDestination,
+                    startDestination = screenName
                 ) {
-                    composable(
-                        route = "ArticleWebViewScreen",
-                    ) {
-                        ArticleWebViewScreen(articleBean)
-                    }
-                    composable(
-                        route = "SettingScreen",
-                    ) {
+                    composable(Screens.Setting.route) {
                         SettingScreen()
                     }
-                    composable(
-                        route = "CollectListScreen",
-                    ) {
+                    composable(Screens.ArticleWebView.route) {
+                        ArticleWebViewScreen(articleBean)
+                    }
+                    composable(Screens.CollectList.route) {
                         CollectListScreen()
+                    }
+                    composable(Screens.ShareList.route) {
+                        ShareListScreen()
                     }
                 }
             }

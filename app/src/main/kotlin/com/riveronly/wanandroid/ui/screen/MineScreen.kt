@@ -37,6 +37,7 @@ import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
+import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.utils.LifecycleEffect
@@ -64,6 +65,7 @@ fun MineScreen() {
     LifecycleEffect(onResume = {
         scope.launch {
             localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+            loadingView.show()
             if (localToken.value.isNullOrEmpty()) {
                 viewModel.fetchLogout()
             } else {
@@ -74,6 +76,7 @@ fun MineScreen() {
 //                    }
 //                }
             }
+            loadingView.dismiss()
         }
     })
 
@@ -105,25 +108,22 @@ fun MineScreen() {
         ) {
             Item(
                 title = "我的积分",
-                accessory = { Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}") },
-                onClick = {})
-            Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {})
-            Item(title = "我的收藏", accessory = {
-                val collectListSize = viewModel.userInfoRes.userInfo.collectIds.size
-                if (collectListSize > 0) {
-                    Text(collectListSize.toString())
-                } else {
-                    ArrowRightIcon()
-                }
-            }, onClick = {
+                accessory = {
+                    Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
+                })
+            Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
-                intent.putExtra(SCREEN_NAME, "CollectListScreen")
+                intent.putExtra(SCREEN_NAME, Screens.ShareList.route)
                 startActivityLauncher.launch(intent)
             })
-            Item(title = "稍后阅读", accessory = { ArrowRightIcon() }, onClick = {})
+            Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {
+                val intent = Intent(view.context, ScreenActivity::class.java)
+                intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
+                startActivityLauncher.launch(intent)
+            })
             Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
-                intent.putExtra(SCREEN_NAME, "SettingScreen")
+                intent.putExtra(SCREEN_NAME, Screens.Setting.route)
                 startActivityLauncher.launch(intent)
             })
         }

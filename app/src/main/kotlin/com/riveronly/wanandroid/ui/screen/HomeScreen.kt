@@ -52,6 +52,7 @@ import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
+import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
@@ -123,7 +124,7 @@ fun HomeScreen() {
                 items(items = articleListBean.value.datas) { item ->
                     Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
                         val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, "ArticleWebViewScreen")
+                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
                         intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
                         startActivityLauncher.launch(intent)
                     })
