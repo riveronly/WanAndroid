@@ -65,7 +65,9 @@ class LoginActivity : ComponentActivity() {
                     TopAppBar(
                         title = {
                             Text(
-                                text = "", maxLines = 1, overflow = TextOverflow.Ellipsis
+                                text = if (viewModel.isRegister) "注册" else "登录",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         },
                         navigationIcon = {
