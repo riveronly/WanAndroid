@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -81,7 +80,6 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                             id = if (article.value.collect) R.drawable.star_fill_24px
                             else R.drawable.star_24px
                         ),
-                        tint = Color.Black,
                         contentDescription = ""
                     )
                 }

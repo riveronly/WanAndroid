@@ -1,11 +1,13 @@
 package com.riveronly.wanandroid.ui.activity.screen
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,13 +23,11 @@ const val SCREEN_NAME = "screenName"
 const val ARTICLE_BEAN = "articleBean"
 
 enum class Screens(val route: String) {
-    Setting("设置"),
-    ArticleWebView("文章详情"),
-    CollectList("我的收藏"),
-    ShareList("我的分享"),
+    Setting("设置"), ArticleWebView("文章详情"), CollectList("我的收藏"), ShareList("我的分享"),
 }
 
 class ScreenActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -40,22 +40,24 @@ class ScreenActivity : ComponentActivity() {
 
         setContent {
             WanAndroidTheme {
-                val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = screenName
-                ) {
-                    composable(Screens.Setting.route) {
-                        SettingScreen()
-                    }
-                    composable(Screens.ArticleWebView.route) {
-                        ArticleWebViewScreen(articleBean)
-                    }
-                    composable(Screens.CollectList.route) {
-                        CollectListScreen()
-                    }
-                    composable(Screens.ShareList.route) {
-                        ShareListScreen()
+                Scaffold {
+                    val navController = rememberNavController()
+                    NavHost(
+                        navController = navController,
+                        startDestination = screenName
+                    ) {
+                        composable(Screens.Setting.route) {
+                            SettingScreen()
+                        }
+                        composable(Screens.ArticleWebView.route) {
+                            ArticleWebViewScreen(articleBean)
+                        }
+                        composable(Screens.CollectList.route) {
+                            CollectListScreen()
+                        }
+                        composable(Screens.ShareList.route) {
+                            ShareListScreen()
+                        }
                     }
                 }
             }

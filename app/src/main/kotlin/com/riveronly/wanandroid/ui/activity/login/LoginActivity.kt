@@ -1,5 +1,6 @@
 package com.riveronly.wanandroid.ui.activity.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
@@ -9,7 +10,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
 class LoginActivity : ComponentActivity() {
     private val viewModel: LoginViewModel by viewModels()
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,9 +74,7 @@ class LoginActivity : ComponentActivity() {
                 val activity = (LocalContext.current as? Activity)
                 val keyboardController = LocalSoftwareKeyboardController.current
 
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                Scaffold(topBar = {
                     TopAppBar(
                         title = {
                             Text(
@@ -91,12 +91,12 @@ class LoginActivity : ComponentActivity() {
                             }
                         },
                     )
-
+                }) { innerPadding ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 50.dp, horizontal = 20.dp)
+                            .padding(innerPadding)
+                            .padding(horizontal = 20.dp)
                     ) {
                         // 用户名输入框
                         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -175,9 +175,10 @@ class LoginActivity : ComponentActivity() {
                             )
                         }
                         //注册按钮
-                        TextButton(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp),
+                        TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 10.dp),
                             onClick = {
                                 viewModel.isRegister = !viewModel.isRegister
                             }) {
