@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">玩安卓</string>
-    <string name="app_name_debug">玩安卓dev</string>
     <string name="profile">profile</string>
     <string name="friends">friends</string>
 </resources>

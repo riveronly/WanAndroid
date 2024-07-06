@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -53,14 +54,10 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         overrideActivityTransition(
-            OVERRIDE_TRANSITION_OPEN,
-            R.anim.bottom_to_top,
-            R.anim.light_to_dark
+            OVERRIDE_TRANSITION_OPEN, R.anim.bottom_to_top, R.anim.light_to_dark
         )
         overrideActivityTransition(
-            OVERRIDE_TRANSITION_CLOSE,
-            R.anim.dark_to_light,
-            R.anim.top_to_bottom
+            OVERRIDE_TRANSITION_CLOSE, R.anim.dark_to_light, R.anim.top_to_bottom
         )
 
         setContent {
@@ -71,11 +68,12 @@ class LoginActivity : ComponentActivity() {
                 // 用于记住用户名和密码的状态
                 var username by remember { mutableStateOf("") }
                 var password by remember { mutableStateOf("") }
+                var passwordConfirm by remember { mutableStateOf("") }
                 val activity = (LocalContext.current as? Activity)
+                val keyboardController = LocalSoftwareKeyboardController.current
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     TopAppBar(
                         title = {
@@ -88,8 +86,7 @@ class LoginActivity : ComponentActivity() {
                                 activity?.finish()
                             }) {
                                 Icon(
-                                    imageVector = Icons.Rounded.Close,
-                                    contentDescription = "Back"
+                                    imageVector = Icons.Rounded.Close, contentDescription = "Back"
                                 )
                             }
                         },
@@ -102,8 +99,7 @@ class LoginActivity : ComponentActivity() {
                             .padding(vertical = 50.dp, horizontal = 20.dp)
                     ) {
                         // 用户名输入框
-                        OutlinedTextField(
-                            modifier = Modifier.fillMaxWidth(),
+                        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                             value = username,
                             maxLines = 1,
                             singleLine = true,
@@ -122,18 +118,46 @@ class LoginActivity : ComponentActivity() {
                             visualTransformation = PasswordVisualTransformation()
                         )
 
+                        if (viewModel.isRegister) {
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = passwordConfirm,
+                                maxLines = 1,
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                onValueChange = { newValue -> passwordConfirm = newValue },
+                                label = { Text("确认密码") },
+                                visualTransformation = PasswordVisualTransformation()
+                            )
+                        }
+
                         // 登录按钮
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 10.dp),
-                            onClick = {
-                                if (username.isBlank() || password.isBlank()) {
-                                    view.toast("请输入用户名和密码")
-                                    return@Button
-                                }
-                                scope.launch {
-                                    loadingView.show()
+                        Button(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp), onClick = {
+                            keyboardController?.hide()
+                            if (username.isBlank() || password.isBlank()) {
+                                view.toast("请输入用户名和密码")
+                                return@Button
+                            }
+                            if (viewModel.isRegister && passwordConfirm.isBlank()) {
+                                view.toast("请输入确认密码")
+                                return@Button
+                            }
+                            scope.launch {
+                                loadingView.show()
+                                if (viewModel.isRegister) {
+                                    viewModel.fetchRegister(username, password, passwordConfirm)
+                                        .collect {
+                                            loadingView.dismiss()
+                                            if (it.errorCode == 0) {
+                                                viewModel.isRegister = false
+                                                view.toast("注册成功,请登录")
+                                            } else {
+                                                view.toast(it.errorMsg)
+                                            }
+                                        }
+                                } else {
                                     viewModel.fetchLogin(username, password).collect {
                                         loadingView.dismiss()
                                         if (it) {
@@ -143,18 +167,24 @@ class LoginActivity : ComponentActivity() {
                                         }
                                     }
                                 }
-                            }) {
-                            Text(fontSize = 16.sp, text = "登录")
+                            }
+                        }) {
+                            Text(
+                                fontSize = 16.sp,
+                                text = if (viewModel.isRegister) "注册" else "登录"
+                            )
                         }
                         //注册按钮
-                        TextButton(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 10.dp),
+                        TextButton(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
                             onClick = {
-
+                                viewModel.isRegister = !viewModel.isRegister
                             }) {
-                            Text(fontSize = 16.sp, text = "没有账号？去注册")
+                            Text(
+                                fontSize = 16.sp,
+                                text = if (viewModel.isRegister) "已有账号？去登录" else "没有账号？去注册"
+                            )
                         }
                     }
                 }

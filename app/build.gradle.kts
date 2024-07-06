@@ -34,7 +34,7 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "_debug"
             //覆盖@string/app_name
-            resValue("string", "app_name", "@string/app_name_debug")
+//            resValue("string", "app_name", "@string/app_name_debug")
         }
     }
     compileOptions {
