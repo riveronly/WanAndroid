@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -71,8 +71,7 @@ fun CollectListScreen() {
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         TopAppBar(title = {
             Text(
@@ -83,8 +82,7 @@ fun CollectListScreen() {
                 activity?.finish()
             }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back"
                 )
             }
         })
@@ -92,31 +90,27 @@ fun CollectListScreen() {
             state = listState, modifier = Modifier.fillMaxSize()
         ) {
             items(items = collectListRes.value.datas) { item ->
-                Item(title = item.title,
-                    detail = item.author + ' ' + item.niceDate,
-                    accessory = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                loadingView.show()
-                                ApiService.unCollectInMine(item.id, item.originId)
-                                loadingView.dismiss()
-                                fetchApi()
-                            }
-                        }) {
-                            Icon(
-                                painter = painterResource(
-                                    id = R.drawable.star_fill_24px
-                                ),
-                                contentDescription = ""
-                            )
+                Item(title = item.title, detail = item.author + ' ' + item.niceDate, accessory = {
+                    IconButton(onClick = {
+                        scope.launch {
+                            loadingView.show()
+                            ApiService.unCollectInMine(item.id, item.originId)
+                            loadingView.dismiss()
+                            fetchApi()
                         }
-                    },
-                    onClick = {
-                        val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                        startActivityLauncher.launch(intent)
-                    })
+                    }) {
+                        Icon(
+                            painter = painterResource(
+                                id = R.drawable.star_fill_24px
+                            ), contentDescription = ""
+                        )
+                    }
+                }, onClick = {
+                    val intent = Intent(view.context, ScreenActivity::class.java)
+                    intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                    intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                    startActivityLauncher.launch(intent)
+                })
             }
         }
     }

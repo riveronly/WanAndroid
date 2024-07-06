@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,8 +49,7 @@ fun SettingScreen() {
     })
 
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         TopAppBar(title = {
             Text(
@@ -61,29 +60,25 @@ fun SettingScreen() {
                 activity?.finish()
             }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back"
                 )
             }
         })
         if (!localToken.value.isNullOrEmpty()) {
-            Item(
-                title = "退出登录",
-                accessory = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.logout_24px),
-                        contentDescription = ""
-                    )
-                },
-                onClick = {
-                    scope.launch {
-                        loadingView.show()
-                        viewModel.fetchLogout()
-                        loadingView.dismiss()
-                        localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
-                        activity?.finish()
-                    }
-                })
+            Item(title = "退出登录", accessory = {
+                Icon(
+                    painter = painterResource(id = R.drawable.logout_24px),
+                    contentDescription = ""
+                )
+            }, onClick = {
+                scope.launch {
+                    loadingView.show()
+                    viewModel.fetchLogout()
+                    loadingView.dismiss()
+                    localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+                    activity?.finish()
+                }
+            })
         }
     }
 }

@@ -1,20 +1,17 @@
 package com.riveronly.wanandroid.ui.activity.login
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -39,7 +36,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
@@ -49,19 +45,10 @@ import kotlinx.coroutines.launch
 class LoginActivity : ComponentActivity() {
     private val viewModel: LoginViewModel by viewModels()
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        overrideActivityTransition(
-            OVERRIDE_TRANSITION_OPEN, R.anim.bottom_to_top, R.anim.light_to_dark
-        )
-        overrideActivityTransition(
-            OVERRIDE_TRANSITION_CLOSE, R.anim.dark_to_light, R.anim.top_to_bottom
-        )
-
         setContent {
             WanAndroidTheme {
                 val view = LocalView.current
@@ -86,7 +73,8 @@ class LoginActivity : ComponentActivity() {
                                 activity?.finish()
                             }) {
                                 Icon(
-                                    imageVector = Icons.Rounded.Close, contentDescription = "Back"
+                                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                    contentDescription = "Back"
                                 )
                             }
                         },

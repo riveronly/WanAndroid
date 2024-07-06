@@ -5,7 +5,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,34 +57,30 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                 }
             }) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back"
                 )
             }
-        },
-            actions = {
-                IconButton(onClick = {
-                    scope.launch {
-                        loadingView.show()
-                        if (article.value.collect) {
-                            ApiService.unCollect(article.value.id)
-                        } else {
-                            ApiService.collect(article.value.id)
-                        }
-                        article.value = article.value.copy(collect = !article.value.collect)
-                        loadingView.dismiss()
+        }, actions = {
+            IconButton(onClick = {
+                scope.launch {
+                    loadingView.show()
+                    if (article.value.collect) {
+                        ApiService.unCollect(article.value.id)
+                    } else {
+                        ApiService.collect(article.value.id)
                     }
-                }) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (article.value.collect) R.drawable.star_fill_24px
-                            else R.drawable.star_24px
-                        ),
-                        contentDescription = ""
-                    )
+                    article.value = article.value.copy(collect = !article.value.collect)
+                    loadingView.dismiss()
                 }
+            }) {
+                Icon(
+                    painter = painterResource(
+                        id = if (article.value.collect) R.drawable.star_fill_24px
+                        else R.drawable.star_24px
+                    ), contentDescription = ""
+                )
             }
-        )
+        })
         if (loadingState is LoadingState.Loading) {
             LinearProgressIndicator(
                 progress = { loadingState.progress }, modifier = Modifier.fillMaxWidth()
