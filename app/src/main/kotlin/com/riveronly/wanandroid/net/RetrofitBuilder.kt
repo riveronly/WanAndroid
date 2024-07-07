@@ -1,7 +1,7 @@
 package com.riveronly.wanandroid.net
 
-import com.riveronly.wanandroid.bean.base.BaseResponse
-import com.riveronly.wanandroid.utils.KVHelper
+import com.riveronly.wanandroid.bean.BaseResponse
+import com.riveronly.wanandroid.helper.KVHelper
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import okhttp3.Interceptor

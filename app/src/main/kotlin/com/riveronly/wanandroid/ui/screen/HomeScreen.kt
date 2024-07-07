@@ -55,7 +55,7 @@ import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
-import com.riveronly.wanandroid.utils.extend.throttleClick
+import com.riveronly.wanandroid.utils.throttleClick
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString

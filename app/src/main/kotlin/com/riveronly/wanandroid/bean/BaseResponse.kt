@@ -1,4 +1,4 @@
-package com.riveronly.wanandroid.bean.base
+package com.riveronly.wanandroid.bean
 
 import androidx.annotation.Keep
 import kotlinx.serialization.Serializable

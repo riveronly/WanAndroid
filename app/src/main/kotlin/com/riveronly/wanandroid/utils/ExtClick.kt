@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.riveronly.wanandroid.utils.extend
+package com.riveronly.wanandroid.utils
 
 import android.annotation.SuppressLint
 import android.os.SystemClock

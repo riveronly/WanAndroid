@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.riveronly.wanandroid.bean.UserInfoBean
+import com.riveronly.wanandroid.helper.KVHelper
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
-import com.riveronly.wanandroid.utils.KVHelper
 import kotlinx.coroutines.flow.flow
 
 class MainViewModel : ViewModel() {

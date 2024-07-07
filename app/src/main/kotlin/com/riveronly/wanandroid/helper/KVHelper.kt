@@ -1,4 +1,4 @@
-package com.riveronly.wanandroid.utils
+package com.riveronly.wanandroid.helper
 
 import android.os.Parcelable
 import com.tencent.mmkv.MMKV

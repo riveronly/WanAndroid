@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.riveronly.wanandroid.bean.BaseResponse
 import com.riveronly.wanandroid.bean.RegisterBean
-import com.riveronly.wanandroid.bean.base.BaseResponse
 import com.riveronly.wanandroid.net.ApiService
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.utils.extend.throttleClick
+import com.riveronly.wanandroid.utils.throttleClick
 
 val DefaultDialogPaddingHor = 20.dp
 val DefaultDialogHorEdgeProtectionMargin = 20.dp

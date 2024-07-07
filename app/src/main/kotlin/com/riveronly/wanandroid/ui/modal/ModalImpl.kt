@@ -26,7 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import com.riveronly.wanandroid.utils.extend.throttleClick
+import com.riveronly.wanandroid.utils.throttleClick
 
 internal abstract class ModalPresent(
     private val rootLayout: FrameLayout,
