@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.riveronly.wanandroid.utils
+package com.riveronly.wanandroid.ui.modal
 
 import android.annotation.SuppressLint
 import android.os.SystemClock
