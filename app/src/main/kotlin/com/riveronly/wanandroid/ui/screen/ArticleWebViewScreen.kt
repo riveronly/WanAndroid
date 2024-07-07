@@ -2,8 +2,9 @@ package com.riveronly.wanandroid.ui.screen
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -83,17 +84,19 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
                 )
             }
         })
-    }) {
-        if (loadingState is LoadingState.Loading) {
-            LinearProgressIndicator(
-                progress = { loadingState.progress }, modifier = Modifier.fillMaxWidth()
+    }) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            if (loadingState is LoadingState.Loading) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    progress = { loadingState.progress },
+                )
+            }
+            WebView(
+                modifier = Modifier.weight(1f),
+                state = state,
+                navigator = navigator
             )
         }
-        WebView(
-            modifier = Modifier
-                .animateContentSize(),
-            state = state,
-            navigator = navigator
-        )
     }
 }
