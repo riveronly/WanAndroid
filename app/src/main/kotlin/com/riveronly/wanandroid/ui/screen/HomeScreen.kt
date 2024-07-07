@@ -78,22 +78,24 @@ fun HomeScreen() {
         //banner图片列表
         loadingView.show()
         val banner = ApiService.banner()
-        loadingView.dismiss()
-        if (banner.errorCode == 0) {
-            imgList.value = banner.data!!
+        if (banner.errorCode == 0 && banner.data != null) {
+            imgList.value = banner.data
         } else {
             view.toast(banner.errorMsg)
         }
+        loadingView.dismiss()
+
         //帖子列表
         loadingView.show()
         val articleList = ApiService.articleList(0)
-        loadingView.dismiss()
-        if (articleList.errorCode == 0) {
-            articleListBean.value = articleList.data!!
+        if (articleList.errorCode == 0 && articleList.data != null) {
+            articleListBean.value = articleList.data
         } else {
             view.toast(articleList.errorMsg)
         }
+        loadingView.dismiss()
     }
+
     LaunchedEffect(Unit) {
         fetchApi()
     }
@@ -192,7 +194,8 @@ fun Carousel(imgList: List<BannerItemBean>) {
                     .padding(2.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .size(8.dp).clickable {
+                    .size(8.dp)
+                    .clickable {
                         scope.launch {
                             pagerState.animateScrollToPage(iteration)
                         }
