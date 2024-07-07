@@ -54,7 +54,6 @@ import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
-import com.riveronly.wanandroid.ui.modal.throttleClick
 import com.riveronly.wanandroid.ui.modal.toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -193,8 +192,7 @@ fun Carousel(imgList: List<BannerItemBean>) {
                     .padding(2.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .size(8.dp)
-                    .throttleClick {
+                    .size(8.dp).clickable {
                         scope.launch {
                             pagerState.animateScrollToPage(iteration)
                         }
