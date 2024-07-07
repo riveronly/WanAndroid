@@ -1,5 +1,6 @@
 *.iml
 .gradle
+.kotlin
 .idea
 !.idea/icon.png
 .DS_Store
