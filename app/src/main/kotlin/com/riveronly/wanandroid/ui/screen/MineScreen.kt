@@ -41,6 +41,7 @@ import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
+import com.riveronly.wanandroid.ui.modal.toast
 import com.riveronly.wanandroid.utils.LifecycleEffect
 import com.riveronly.wanandroid.utils.MMKVUtil
 import kotlinx.coroutines.launch
@@ -71,11 +72,6 @@ fun MineScreen() {
                 viewModel.fetchLogout()
             } else {
                 viewModel.fetchUserinfo()
-//                viewModel.fetchCoin().collect {
-//                    if (it) {
-//                        view.toast("签到成功")
-//                    }
-//                }
             }
             loadingView.dismiss()
         }
@@ -93,6 +89,16 @@ fun MineScreen() {
                     if (viewModel.userInfoRes.userInfo.id == 0) {
                         val intent = Intent(context, LoginActivity::class.java)
                         startActivityLauncher.launch(intent)
+                    } else {
+                        scope.launch {
+                            viewModel
+                                .fetchCoin()
+                                .collect {
+                                    if (it) {
+                                        view.toast("今日已签到")
+                                    }
+                                }
+                        }
                     }
                 }
                 .padding(10.dp)) {
@@ -105,21 +111,16 @@ fun MineScreen() {
                 tint = Color.White
             )
             Text(text = viewModel.userInfoRes.userInfo.nickname.takeIf { it.isNotBlank() }
-                ?: "请登录",
-                fontSize = 20.sp,
-                color = Color.White,
-                fontWeight = FontWeight.Bold)
+                ?: "请登录", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
         }
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            Item(
-                title = "我的积分",
-                accessory = {
-                    Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
-                })
+            Item(title = "我的积分", accessory = {
+                Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
+            })
             Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
                 intent.putExtra(SCREEN_NAME, Screens.ShareList.route)
@@ -142,7 +143,6 @@ fun MineScreen() {
 @Composable
 fun ArrowRightIcon() {
     Icon(
-        painter = painterResource(id = R.drawable.ic_chevron),
-        contentDescription = ""
+        painter = painterResource(id = R.drawable.ic_chevron), contentDescription = ""
     )
 }
