@@ -42,8 +42,8 @@ import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
+import com.riveronly.wanandroid.utils.KVHelper
 import com.riveronly.wanandroid.utils.LifecycleEffect
-import com.riveronly.wanandroid.utils.MMKVUtil
 import kotlinx.coroutines.launch
 
 /**
@@ -58,7 +58,7 @@ fun MineScreen() {
     val context = LocalContext.current
     val loadingView = view.loadingModal()
     val localToken = remember {
-        mutableStateOf(MMKVUtil.getStringSet(LOCAL_TOKEN))
+        mutableStateOf(KVHelper.getStringSet(LOCAL_TOKEN))
     }
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -66,7 +66,7 @@ fun MineScreen() {
 
     LifecycleEffect(onResume = {
         scope.launch {
-            localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+            localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
             loadingView.show()
             if (localToken.value.isNullOrEmpty()) {
                 viewModel.fetchLogout()

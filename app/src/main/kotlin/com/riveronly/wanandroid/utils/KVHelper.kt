@@ -8,7 +8,7 @@ import java.util.Collections
  * MMKV工具类
  * 需要先MMKV.initialize(context)
  */
-object MMKVUtil {
+object KVHelper {
     var mmkv: MMKV? = null
 
     init {

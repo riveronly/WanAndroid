@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.riveronly.wanandroid.bean.UserInfoBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
-import com.riveronly.wanandroid.utils.MMKVUtil
+import com.riveronly.wanandroid.utils.KVHelper
 import kotlinx.coroutines.flow.flow
 
 class MainViewModel : ViewModel() {
@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
      */
     suspend fun fetchLogout() {
         ApiService.logout()
-        MMKVUtil.removeKey(LOCAL_TOKEN)
+        KVHelper.removeKey(LOCAL_TOKEN)
         userInfoRes = UserInfoBean()
     }
 

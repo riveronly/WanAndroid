@@ -26,8 +26,8 @@ import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
+import com.riveronly.wanandroid.utils.KVHelper
 import com.riveronly.wanandroid.utils.LifecycleEffect
-import com.riveronly.wanandroid.utils.MMKVUtil
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,12 +39,12 @@ fun SettingScreen() {
     val loadingView = view.loadingModal()
     val activity = (LocalContext.current as? Activity)
     val localToken = remember {
-        mutableStateOf(MMKVUtil.getStringSet(LOCAL_TOKEN))
+        mutableStateOf(KVHelper.getStringSet(LOCAL_TOKEN))
     }
 
     LifecycleEffect(onResume = {
         scope.launch {
-            localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+            localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
         }
     })
 
@@ -75,7 +75,7 @@ fun SettingScreen() {
                     loadingView.show()
                     viewModel.fetchLogout()
                     loadingView.dismiss()
-                    localToken.value = MMKVUtil.getStringSet(LOCAL_TOKEN)
+                    localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
                     activity?.finish()
                 }
             })

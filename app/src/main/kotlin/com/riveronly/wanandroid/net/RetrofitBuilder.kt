@@ -1,7 +1,7 @@
 package com.riveronly.wanandroid.net
 
 import com.riveronly.wanandroid.bean.base.BaseResponse
-import com.riveronly.wanandroid.utils.MMKVUtil
+import com.riveronly.wanandroid.utils.KVHelper
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 import okhttp3.Interceptor
@@ -59,7 +59,7 @@ object RetrofitBuilder {
     class RequestHeaderInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder()
-            MMKVUtil.getStringSet(LOCAL_TOKEN)?.forEach { cookie ->
+            KVHelper.getStringSet(LOCAL_TOKEN)?.forEach { cookie ->
                 request.addHeader("Cookie", cookie)
             }
             return chain.proceed(request.build())
@@ -76,7 +76,7 @@ object RetrofitBuilder {
             val loginApiPath = "/user/login"
             if (requestUrl.contains(loginApiPath)) {
                 val cookieSet = originalResponse.headers("Set-Cookie").toSet()
-                MMKVUtil.put(LOCAL_TOKEN, cookieSet)
+                KVHelper.put(LOCAL_TOKEN, cookieSet)
             }
             return originalResponse
         }
