@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         userScrollEnabled = false,
                         state = pagerState,
-                        beyondBoundsPageCount = Tab.entries.size,
+                        beyondViewportPageCount = Tab.entries.size,
                     ) { index ->
                         when (Tab.entries[index]) {
                             Tab.Home -> HomeScreen()

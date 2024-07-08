@@ -78,4 +78,5 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.tencent.mmkv)
     implementation(libs.github.compose.webview)
+    implementation(libs.material3)
 }

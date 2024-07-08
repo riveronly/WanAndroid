@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,13 +25,17 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +55,6 @@ import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
-import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import kotlinx.coroutines.delay
@@ -60,6 +62,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun HomeScreen() {
@@ -69,6 +72,7 @@ fun HomeScreen() {
     val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
     val articleListBean = remember { mutableStateOf(ArticleListBean()) }
 
+    var isRefreshing by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -113,25 +117,40 @@ fun HomeScreen() {
             Text("点击重试")
         }
     } else {
-        LazyColumn(
-            state = listState, modifier = Modifier.fillMaxSize()
-        ) {
-            item {
-                Carousel(imgList.value)
+        PullToRefreshBox(isRefreshing = isRefreshing, onRefresh = {
+            scope.launch {
+                isRefreshing = true
+                fetchApi()
+                isRefreshing = false
             }
-            items(items = articleListBean.value.datas) { item ->
-                Item(title = item.title, detail = item.author + ' ' + item.niceDate, onClick = {
-                    val intent = Intent(view.context, ScreenActivity::class.java)
-                    intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                    intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                    startActivityLauncher.launch(intent)
-                })
+        }) {
+            LazyColumn(
+                state = listState, modifier = Modifier.fillMaxSize()
+            ) {
+                item {
+                    Carousel(imgList.value)
+                }
+                items(items = articleListBean.value.datas) { item ->
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            val intent = Intent(view.context, ScreenActivity::class.java)
+                            intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                            intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                            startActivityLauncher.launch(intent)
+                        },
+                        headlineContent = {
+                            Text(text = item.title)
+                        },
+                        trailingContent = {
+                            Text(text = item.niceDate)
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Carousel(imgList: List<BannerItemBean>) {
     //HorizontalPager的状态
@@ -157,7 +176,7 @@ fun Carousel(imgList: List<BannerItemBean>) {
             modifier = Modifier
                 .height(150.dp)
                 .padding(top = 10.dp),
-            beyondBoundsPageCount = imgList.size
+            beyondViewportPageCount = imgList.size
         ) { index ->
             //激活项的缩放过渡
             val imgScale by animateFloatAsState(
