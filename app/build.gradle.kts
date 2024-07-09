@@ -77,4 +77,5 @@ dependencies {
     implementation(libs.tencent.mmkv)
     implementation(libs.github.compose.webview)
     implementation(libs.material3)
+    implementation(libs.androidx.paging.compose)
 }

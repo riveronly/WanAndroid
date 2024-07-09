@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -23,7 +26,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.sp
 import com.riveronly.wanandroid.bean.UserArticleBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
@@ -62,48 +67,58 @@ fun PlazaScreen() {
     LaunchedEffect(Unit) {
         fetchApi()
     }
-    if (userArticleListBean.value.datas.isEmpty()) {
+    Column {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    scope.launch {
-                        fetchApi()
-                    }
-                }
+                .fillMaxWidth()
+                .background(Color.White)
         ) {
-            Text("点击重试")
+            Text(text = "近期分享", fontSize = 18.sp)
         }
-    } else {
-        PullToRefreshBox(isRefreshing = isRefreshing, onRefresh = {
-            scope.launch {
-                isRefreshing = true
-                fetchApi()
-                isRefreshing = false
-            }
-        }) {
-            LazyColumn(
-                state = listState, modifier = Modifier.fillMaxSize()
-            ) {
-                items(items = userArticleListBean.value.datas) { item ->
-                    ListItem(
-                        modifier = Modifier.clickable {
-                            val intent = Intent(view.context, ScreenActivity::class.java)
-                            intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                            intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                            startActivityLauncher.launch(intent)
-                        },
-                        headlineContent = {
-                            Text(text = item.title)
-                        },
-                        trailingContent = {
-                            Text(text = item.niceShareDate)
-                        },
-                        supportingContent = {
-                            Text(text = item.shareUser)
+        if (userArticleListBean.value.datas.isEmpty()) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        scope.launch {
+                            fetchApi()
                         }
-                    )
+                    }
+            ) {
+                Text("点击重试")
+            }
+        } else {
+            PullToRefreshBox(isRefreshing = isRefreshing, onRefresh = {
+                scope.launch {
+                    isRefreshing = true
+                    fetchApi()
+                    isRefreshing = false
+                }
+            }) {
+                LazyColumn(
+                    state = listState, modifier = Modifier.fillMaxSize()
+                ) {
+                    items(items = userArticleListBean.value.datas) { item ->
+                        ListItem(
+                            modifier = Modifier.clickable {
+                                val intent = Intent(view.context, ScreenActivity::class.java)
+                                intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                                intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                                startActivityLauncher.launch(intent)
+                            },
+                            headlineContent = {
+                                Text(text = item.title)
+                            },
+                            trailingContent = {
+                                Text(text = item.niceShareDate)
+                            },
+                            supportingContent = {
+                                Text(text = item.shareUser)
+                            }
+                        )
+                    }
                 }
             }
         }
