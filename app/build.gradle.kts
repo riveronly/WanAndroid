@@ -31,10 +31,8 @@ android {
             signingConfig = signingConfigs.getByName("debug") //fixme 需正式版签名
         }
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "_debug"
-            //覆盖@string/app_name
-//            resValue("string", "app_name", "@string/app_name_debug")
+            applicationIdSuffix = ".test"
+            versionNameSuffix = ".test"
         }
     }
     compileOptions {

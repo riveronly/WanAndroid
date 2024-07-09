@@ -7,6 +7,7 @@ import com.riveronly.wanandroid.bean.CoinBean
 import com.riveronly.wanandroid.bean.CollectBean
 import com.riveronly.wanandroid.bean.LoginBean
 import com.riveronly.wanandroid.bean.RegisterBean
+import com.riveronly.wanandroid.bean.UserArticleBean
 import com.riveronly.wanandroid.bean.UserInfoBean
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -20,8 +21,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/user/login")
     suspend fun login(
-        @Field("username") username: String,
-        @Field("password") password: String
+        @Field("username") username: String, @Field("password") password: String
     ): BaseResponse<LoginBean>
 
     @FormUrlEncoded
@@ -45,10 +45,14 @@ interface ApiService {
     suspend fun banner(): BaseResponse<ArrayList<BannerItemBean>>
 
     @GET("/article/list/{page}/json")
-    suspend fun articleList(@Path("page") page: Int): BaseResponse<ArticleListBean>
+    suspend fun articleList(
+        @Path("page") page: Int
+    ): BaseResponse<ArticleListBean>
 
     @GET("/lg/collect/list/{page}/json")
-    suspend fun collectList(@Path("page") page: Int): BaseResponse<CollectBean>
+    suspend fun collectList(
+        @Path("page") page: Int
+    ): BaseResponse<CollectBean>
 
     @FormUrlEncoded
     @POST("/lg/uncollect/{id}/json")
@@ -66,4 +70,10 @@ interface ApiService {
     suspend fun collect(
         @Path("id") id: Int,
     ): BaseResponse<String>
+
+    @GET("/user_article/list/{page}/json")
+    suspend fun userArticleList(
+        @Path("page") page: Int
+    ): BaseResponse<UserArticleBean>
+
 }

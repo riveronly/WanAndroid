@@ -55,7 +55,6 @@ import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
-import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -67,7 +66,6 @@ import kotlinx.serialization.json.Json
 @Composable
 fun HomeScreen() {
     val view = LocalView.current
-    val loadingView = view.loadingModal()
     val scope = rememberCoroutineScope()
     val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
     val articleListBean = remember { mutableStateOf(ArticleListBean()) }
@@ -79,25 +77,22 @@ fun HomeScreen() {
     ) {}
 
     suspend fun fetchApi() {
+
         //banner图片列表
-        loadingView.show()
         val banner = ApiService.banner()
         if (banner.errorCode == 0 && banner.data != null) {
             imgList.value = banner.data
         } else {
             view.toast(banner.errorMsg)
         }
-        loadingView.dismiss()
 
         //帖子列表
-        loadingView.show()
         val articleList = ApiService.articleList(0)
         if (articleList.errorCode == 0 && articleList.data != null) {
             articleListBean.value = articleList.data
         } else {
             view.toast(articleList.errorMsg)
         }
-        loadingView.dismiss()
     }
 
     LaunchedEffect(Unit) {
@@ -143,6 +138,9 @@ fun HomeScreen() {
                         },
                         trailingContent = {
                             Text(text = item.niceDate)
+                        },
+                        supportingContent = {
+                            Text(text = item.author.takeIf { it.isNotBlank() } ?: item.shareUser)
                         }
                     )
                 }

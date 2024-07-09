@@ -4,13 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Face
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,20 +15,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.riveronly.wanandroid.Tab.Home
+import com.riveronly.wanandroid.Tab.Mine
+import com.riveronly.wanandroid.Tab.Plaza
 import com.riveronly.wanandroid.ui.screen.HomeScreen
 import com.riveronly.wanandroid.ui.screen.MineScreen
+import com.riveronly.wanandroid.ui.screen.PlazaScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import kotlinx.coroutines.launch
 
-enum class Tab(val title: String, val icon: ImageVector, val isUsing: Boolean = true) {
-    Home("首页", Icons.Rounded.Home),
-    Mine("我的", Icons.Rounded.Face),
+enum class Tab(
+    val title: String,
+    @DrawableRes val iconResNormal: Int,
+    @DrawableRes val iconResFill: Int,
+    val isUsing: Boolean = true
+) {
+    Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
+    Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
+    Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
 }
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         enableEdgeToEdge()
@@ -45,14 +51,23 @@ class MainActivity : ComponentActivity() {
                     NavigationBar {
                         Tab.entries.forEachIndexed { index, tab ->
                             if (tab.isUsing) {
+                                val isSelected = pagerState.settledPage == index
                                 NavigationBarItem(
-                                    selected = pagerState.settledPage == index,
+                                    selected = isSelected,
                                     onClick = {
                                         scope.launch {
                                             pagerState.scrollToPage(index)
                                         }
                                     },
-                                    icon = { Icon(tab.icon, contentDescription = "") },
+                                    icon = {
+                                        Icon(
+                                            painterResource(
+                                                if (isSelected) tab.iconResFill
+                                                else tab.iconResNormal
+                                            ),
+                                            contentDescription = ""
+                                        )
+                                    },
                                     label = { Text(tab.title) })
                             }
                         }
@@ -65,8 +80,9 @@ class MainActivity : ComponentActivity() {
                         beyondViewportPageCount = Tab.entries.size,
                     ) { index ->
                         when (Tab.entries[index]) {
-                            Tab.Home -> HomeScreen()
-                            Tab.Mine -> MineScreen()
+                            Home -> HomeScreen()
+                            Plaza -> PlazaScreen()
+                            Mine -> MineScreen()
                         }
                     }
                 }
