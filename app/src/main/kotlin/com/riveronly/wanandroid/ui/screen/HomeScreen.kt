@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -68,11 +68,10 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun HomeScreen() {
+fun HomeScreen(listState: LazyListState) {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
     val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
-    val listState = rememberLazyListState()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}

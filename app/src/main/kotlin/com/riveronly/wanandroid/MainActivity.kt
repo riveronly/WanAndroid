@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -46,6 +47,8 @@ class MainActivity : ComponentActivity() {
             WanAndroidTheme {
                 val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
                 val scope = rememberCoroutineScope()
+                val homeListState = rememberLazyListState()
+                val plazaListState = rememberLazyListState()
 
                 Scaffold(bottomBar = {
                     NavigationBar {
@@ -56,7 +59,14 @@ class MainActivity : ComponentActivity() {
                                     selected = isSelected,
                                     onClick = {
                                         scope.launch {
-                                            pagerState.scrollToPage(index)
+                                            if (isSelected) {
+                                                when (index) {
+                                                    0 -> homeListState.animateScrollToItem(0)
+                                                    1 -> plazaListState.animateScrollToItem(0)
+                                                }
+                                            } else {
+                                                pagerState.scrollToPage(index)
+                                            }
                                         }
                                     },
                                     icon = {
@@ -80,8 +90,8 @@ class MainActivity : ComponentActivity() {
                         beyondViewportPageCount = Tab.entries.size,
                     ) { index ->
                         when (Tab.entries[index]) {
-                            Home -> HomeScreen()
-                            Plaza -> PlazaScreen()
+                            Home -> HomeScreen(homeListState)
+                            Plaza -> PlazaScreen(plazaListState)
                             Mine -> MineScreen()
                         }
                     }

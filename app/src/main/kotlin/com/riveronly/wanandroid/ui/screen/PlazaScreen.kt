@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
@@ -42,10 +42,9 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun PlazaScreen() {
+fun PlazaScreen(listState: LazyListState) {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
-    val listState = rememberLazyListState()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
