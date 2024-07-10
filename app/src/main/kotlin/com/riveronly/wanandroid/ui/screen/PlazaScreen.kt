@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -100,6 +101,7 @@ fun PlazaScreen() {
                             Text(text = item.shareUser)
                         }
                     )
+                    HorizontalDivider()
                 }
                 if (pagingItems.loadState.append is LoadState.Loading) {
                     item {
