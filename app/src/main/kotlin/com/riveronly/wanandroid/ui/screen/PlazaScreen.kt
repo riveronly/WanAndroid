@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -56,6 +57,7 @@ fun PlazaScreen() {
         pagingSourceFactory = { PlazaPagingSource() }
     )
     val pagingItems = pager.flow.collectAsLazyPagingItems()
+    val pullToRefreshState = rememberPullToRefreshState()
 
     Column {
         Box(
@@ -66,11 +68,15 @@ fun PlazaScreen() {
         ) {
             Text(text = "近期分享", fontSize = 18.sp)
         }
-        PullToRefreshBox(isRefreshing = false, onRefresh = {
-            scope.launch {
-                pagingItems.refresh()
-            }
-        }) {
+        PullToRefreshBox(
+            state = pullToRefreshState,
+            isRefreshing = false,
+            onRefresh = {
+                scope.launch {
+                    pagingItems.refresh()
+                    pullToRefreshState.animateToHidden()
+                }
+            }) {
             LazyColumn(
                 state = listState, modifier = Modifier.fillMaxSize()
             ) {

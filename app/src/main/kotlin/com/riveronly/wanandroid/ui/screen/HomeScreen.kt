@@ -28,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -74,7 +75,6 @@ fun HomeScreen() {
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
-
     val pager = Pager(
         config = PagingConfig(
             pageSize = 20,
@@ -83,6 +83,7 @@ fun HomeScreen() {
         pagingSourceFactory = { HomePagingSource() }
     )
     val pagingItems = pager.flow.collectAsLazyPagingItems()
+    val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
         //banner图片列表
@@ -94,12 +95,15 @@ fun HomeScreen() {
         }
     }
 
-
-    PullToRefreshBox(isRefreshing = false, onRefresh = {
-        scope.launch {
-            pagingItems.refresh()
-        }
-    }) {
+    PullToRefreshBox(
+        state = pullToRefreshState,
+        isRefreshing = false,
+        onRefresh = {
+            scope.launch {
+                pagingItems.refresh()
+                pullToRefreshState.animateToHidden()
+            }
+        }) {
         LazyColumn(
             state = listState, modifier = Modifier.fillMaxSize()
         ) {
