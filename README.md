@@ -1,9 +1,10 @@
 - kotlin = "2.0.0"
 - composeBom = "2024.06.00"
 - splashScreen
-- navigationCompose
-- pagingCompose
+- navigation
 - material3
+- paging
+- pullToRefresh
 - mmkv
 - retrofit
 - kotlinx-Serialization
