@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -35,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,10 +43,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
-import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.bean.BannerItemBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
@@ -56,6 +57,7 @@ import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.toast
+import com.riveronly.wanandroid.ui.paging.HomePagingSource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
@@ -68,16 +70,21 @@ fun HomeScreen() {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
     val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
-    val articleListBean = remember { mutableStateOf(ArticleListBean()) }
-
-    var isRefreshing by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
 
-    suspend fun fetchApi() {
+    val pager = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            prefetchDistance = 8
+        ),
+        pagingSourceFactory = { HomePagingSource() }
+    )
+    val pagingItems = pager.flow.collectAsLazyPagingItems()
 
+    LaunchedEffect(Unit) {
         //banner图片列表
         val banner = ApiService.banner()
         if (banner.errorCode == 0 && banner.data != null) {
@@ -85,64 +92,51 @@ fun HomeScreen() {
         } else {
             view.toast(banner.errorMsg)
         }
+    }
 
-        //帖子列表
-        val articleList = ApiService.articleList(0)
-        if (articleList.errorCode == 0 && articleList.data != null) {
-            articleListBean.value = articleList.data
-        } else {
-            view.toast(articleList.errorMsg)
+
+    PullToRefreshBox(isRefreshing = false, onRefresh = {
+        scope.launch {
+            pagingItems.refresh()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        fetchApi()
-    }
-    if (articleListBean.value.datas.isEmpty()) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-                    scope.launch {
-                        fetchApi()
-                    }
-                }
+    }) {
+        LazyColumn(
+            state = listState, modifier = Modifier.fillMaxSize()
         ) {
-            Text("点击重试")
-        }
-    } else {
-        PullToRefreshBox(isRefreshing = isRefreshing, onRefresh = {
-            scope.launch {
-                isRefreshing = true
-                fetchApi()
-                isRefreshing = false
+            item {
+                Carousel(imgList.value)
             }
-        }) {
-            LazyColumn(
-                state = listState, modifier = Modifier.fillMaxSize()
-            ) {
+            items(pagingItems.itemCount) {
+                val item = pagingItems[it] ?: return@items
+                ListItem(
+                    modifier = Modifier.clickable {
+                        val intent = Intent(view.context, ScreenActivity::class.java)
+                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                        startActivityLauncher.launch(intent)
+                    },
+                    headlineContent = {
+                        Text(text = item.title)
+                    },
+                    trailingContent = {
+                        Text(text = item.niceDate)
+                    },
+                    supportingContent = {
+                        Text(text = item.author.takeIf { author -> author.isNotBlank() }
+                            ?: item.shareUser)
+                    }
+                )
+            }
+            if (pagingItems.loadState.append is LoadState.Loading) {
                 item {
-                    Carousel(imgList.value)
-                }
-                items(items = articleListBean.value.datas) { item ->
-                    ListItem(
-                        modifier = Modifier.clickable {
-                            val intent = Intent(view.context, ScreenActivity::class.java)
-                            intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                            intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                            startActivityLauncher.launch(intent)
-                        },
-                        headlineContent = {
-                            Text(text = item.title)
-                        },
-                        trailingContent = {
-                            Text(text = item.niceDate)
-                        },
-                        supportingContent = {
-                            Text(text = item.author.takeIf { it.isNotBlank() } ?: item.shareUser)
-                        }
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "加载中...")
+                    }
                 }
             }
         }
