@@ -121,11 +121,6 @@ fun MineScreen() {
             Item(title = "我的积分", accessory = {
                 Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
             })
-            Item(title = "我的分享", accessory = { ArrowRightIcon() }, onClick = {
-                val intent = Intent(view.context, ScreenActivity::class.java)
-                intent.putExtra(SCREEN_NAME, Screens.ShareList.route)
-                startActivityLauncher.launch(intent)
-            })
             Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
                 intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
