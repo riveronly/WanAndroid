@@ -70,12 +70,12 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.material3)//覆盖bom使用material3的bate版本
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
     implementation(libs.kotlinx.serialization)
     implementation(libs.coil.compose)
     implementation(libs.tencent.mmkv)
     implementation(libs.github.compose.webview)
-    implementation(libs.material3)
-    implementation(libs.androidx.paging.compose)
 }

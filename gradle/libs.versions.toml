@@ -15,12 +15,10 @@ pagingCompose = "3.3.0"
 retrofit = "2.11.0"
 kotlinxSerializationJson = "1.7.1"
 lifecycleRuntimeCompose = "2.8.3"
-pagingCommonAndroid = "3.3.0"
 
 [libraries]
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 github-compose-webview = { module = "io.github.kevinnzou:compose-webview", version.ref = "composeWebview" }
-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 tencent-mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -41,6 +39,8 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+#覆盖bom使用material3的bate版本
+material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 
 [plugins]
