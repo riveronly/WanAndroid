@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -121,16 +122,19 @@ fun MineScreen() {
             Item(title = "我的积分", accessory = {
                 Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
             })
+            HorizontalDivider()
             Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
                 intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
                 startActivityLauncher.launch(intent)
             })
+            HorizontalDivider()
             Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {
                 val intent = Intent(view.context, ScreenActivity::class.java)
                 intent.putExtra(SCREEN_NAME, Screens.Setting.route)
                 startActivityLauncher.launch(intent)
             })
+            HorizontalDivider()
         }
     }
 }
