@@ -1,15 +1,11 @@
-- agp = "8.5.0"
 - kotlin = "2.0.0"
-- coreKtx = "1.13.1"
-- splashScreen = "1.0.1"
 - composeBom = "2024.06.00"
-- activityCompose = "1.9.0"
-- navigationCompose = "2.7.7"
-- pagingCompose = "3.3.0"
-- lifecycleRuntimeCompose = "2.8.3"
-- material3 = "1.3.0-beta04"
-- mmkv = "1.3.6"
-- retrofit = "2.11.0"
-- kotlinxSerializationJson = "1.7.1"
-- coilCompose = "2.6.0"
-- webViewCompose = "0.33.6"
+- splashScreen
+- navigationCompose
+- pagingCompose
+- material3
+- mmkv
+- retrofit
+- kotlinx-Serialization
+- coil
+- webView
