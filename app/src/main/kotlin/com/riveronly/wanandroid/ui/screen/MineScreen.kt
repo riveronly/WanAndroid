@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,7 +45,6 @@ import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
-import com.riveronly.wanandroid.utils.LifecycleEffect
 import kotlinx.coroutines.launch
 
 /**
@@ -61,11 +61,8 @@ fun MineScreen() {
     val localToken = remember {
         mutableStateOf(KVHelper.getStringSet(LOCAL_TOKEN))
     }
-    val startActivityLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {}
 
-    LifecycleEffect(onResume = {
+    fun checkLoginStatus() {
         scope.launch {
             localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
             loadingView.show()
@@ -76,7 +73,17 @@ fun MineScreen() {
             }
             loadingView.dismiss()
         }
-    })
+    }
+
+    val startActivityLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        checkLoginStatus()
+    }
+
+    LaunchedEffect(Unit) {
+        checkLoginStatus()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
