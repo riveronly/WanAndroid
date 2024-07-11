@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -48,8 +46,6 @@ class MainActivity : ComponentActivity() {
             WanAndroidTheme {
                 val pagerState = rememberPagerState(pageCount = { Tab.entries.size })
                 val scope = rememberCoroutineScope()
-                val homeListState = rememberLazyListState()
-                val plazaListState = rememberLazyListState()
 
                 Scaffold(bottomBar = {
                     NavigationBar {
@@ -61,12 +57,7 @@ class MainActivity : ComponentActivity() {
                                     selected = isSelected,
                                     onClick = {
                                         scope.launch {
-                                            if (isSelected) {
-                                                when (index) {
-                                                    0 -> scrollToTop(homeListState)
-                                                    1 -> scrollToTop(plazaListState)
-                                                }
-                                            } else {
+                                            if (!isSelected) {
                                                 pagerState.scrollToPage(index)
                                             }
                                         }
@@ -74,25 +65,8 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Icon(
                                             painterResource(
-                                                if (isSelected) {
-                                                    when (index) {
-                                                        0 -> if (homeListState.canScrollBackward) {
-                                                            R.drawable.vertical_align_top_24px
-                                                        } else {
-                                                            tab.iconResFill
-                                                        }
-
-                                                        1 -> if (plazaListState.canScrollBackward) {
-                                                            R.drawable.vertical_align_top_24px
-                                                        } else {
-                                                            tab.iconResFill
-                                                        }
-
-                                                        else -> tab.iconResFill
-                                                    }
-                                                } else {
-                                                    tab.iconResNormal
-                                                }
+                                                if (isSelected) tab.iconResFill
+                                                else tab.iconResNormal
                                             ),
                                             contentDescription = ""
                                         )
@@ -109,8 +83,8 @@ class MainActivity : ComponentActivity() {
                         beyondViewportPageCount = Tab.entries.size,
                     ) { index ->
                         when (Tab.entries[index]) {
-                            Home -> HomeScreen(homeListState)
-                            Plaza -> PlazaScreen(plazaListState)
+                            Home -> HomeScreen()
+                            Plaza -> PlazaScreen()
                             Mine -> MineScreen()
                         }
                     }
@@ -118,14 +92,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-/**
- * listState控制滑到顶部
- */
-suspend fun scrollToTop(listState: LazyListState) {
-    if (listState.firstVisibleItemIndex >= 1) {
-        listState.scrollToItem(1)
-    }
-    listState.animateScrollToItem(0)
 }

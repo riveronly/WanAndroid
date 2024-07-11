@@ -19,14 +19,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -44,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.Pager
@@ -52,6 +55,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
+import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.bean.BannerItemBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
@@ -68,9 +72,10 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
-fun HomeScreen(listState: LazyListState) {
+fun HomeScreen() {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
     val imgList = remember { mutableStateOf(ArrayList<BannerItemBean>()) }
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -147,6 +152,16 @@ fun HomeScreen(listState: LazyListState) {
                 }
             }
         }
+        if (listState.canScrollBackward) {
+            ListToTopButton(onClick = {
+                if (listState.firstVisibleItemIndex >= 1) {
+                    listState.requestScrollToItem(1)
+                }
+                scope.launch {
+                    listState.animateScrollToItem(0)
+                }
+            })
+        }
     }
 }
 
@@ -219,6 +234,23 @@ fun Carousel(imgList: List<BannerItemBean>) {
                         }
                     })
             }
+        }
+    }
+}
+
+@Composable
+fun ListToTopButton(onClick: () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        SmallFloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(15.dp),
+            onClick = onClick
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.vertical_align_top_24px),
+                contentDescription = ""
+            )
         }
     }
 }
