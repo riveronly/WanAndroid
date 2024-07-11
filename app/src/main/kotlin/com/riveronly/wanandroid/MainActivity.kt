@@ -57,6 +57,7 @@ class MainActivity : ComponentActivity() {
                             if (tab.isUsing) {
                                 val isSelected = pagerState.settledPage == index
                                 NavigationBarItem(
+                                    label = { Text(tab.title) },
                                     selected = isSelected,
                                     onClick = {
                                         scope.launch {
@@ -73,13 +74,30 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Icon(
                                             painterResource(
-                                                if (isSelected) tab.iconResFill
-                                                else tab.iconResNormal
+                                                if (isSelected) {
+                                                    when (index) {
+                                                        0 -> if (homeListState.canScrollBackward) {
+                                                            R.drawable.vertical_align_top_24px
+                                                        } else {
+                                                            tab.iconResFill
+                                                        }
+
+                                                        1 -> if (plazaListState.canScrollBackward) {
+                                                            R.drawable.vertical_align_top_24px
+                                                        } else {
+                                                            tab.iconResFill
+                                                        }
+
+                                                        else -> tab.iconResFill
+                                                    }
+                                                } else {
+                                                    tab.iconResNormal
+                                                }
                                             ),
                                             contentDescription = ""
                                         )
-                                    },
-                                    label = { Text(tab.title) })
+                                    }
+                                )
                             }
                         }
                     }
