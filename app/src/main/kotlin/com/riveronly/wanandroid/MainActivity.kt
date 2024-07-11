@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -61,8 +62,8 @@ class MainActivity : ComponentActivity() {
                                         scope.launch {
                                             if (isSelected) {
                                                 when (index) {
-                                                    0 -> homeListState.animateScrollToItem(0)
-                                                    1 -> plazaListState.animateScrollToItem(0)
+                                                    0 -> scrollToTop(homeListState)
+                                                    1 -> scrollToTop(plazaListState)
                                                 }
                                             } else {
                                                 pagerState.scrollToPage(index)
@@ -99,4 +100,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+/**
+ * listState控制滑到顶部
+ */
+suspend fun scrollToTop(listState: LazyListState) {
+    if (listState.firstVisibleItemIndex >= 1) {
+        listState.scrollToItem(1)
+    }
+    listState.animateScrollToItem(0)
 }
