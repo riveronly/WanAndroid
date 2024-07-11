@@ -75,13 +75,15 @@ fun HomeScreen(listState: LazyListState) {
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) {}
-    val pager = Pager(
-        config = PagingConfig(
-            pageSize = 20,
-            prefetchDistance = 8
-        ),
-        pagingSourceFactory = { HomePagingSource() }
-    )
+    val pager = remember {
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                prefetchDistance = 8
+            ),
+            pagingSourceFactory = { HomePagingSource() }
+        )
+    }
     val pagingItems = pager.flow.collectAsLazyPagingItems()
     val pullToRefreshState = rememberPullToRefreshState()
 
