@@ -11,9 +11,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,48 +40,18 @@ enum class Tab(
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
-        super.onCreate(savedInstanceState)
+
         setContent {
             WanAndroidTheme {
                 val navController = rememberNavController()
-
-                Scaffold(bottomBar = {
-                    NavigationBar {
-                        Tab.entries.forEach { tab ->
-                            val isSelected =
-                                navController.currentDestination?.route == tab.title
-                            NavigationBarItem(
-                                label = { Text(tab.title) },
-                                selected = isSelected,
-                                onClick = {
-                                    navController.navigate(tab.title) {
-                                        // 避免 BackStack 增长，跳转页面时，将栈内 startDestination 之外的页面弹出
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            //出栈的 BackStack 保存状态
-                                            saveState = true
-                                        }
-                                        // 避免点击同一个 Item 时反复入栈
-                                        launchSingleTop = true
-
-                                        // 如果之前出栈时保存状态了，那么重新入栈时恢复状态
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        painterResource(
-                                            if (isSelected) tab.iconResFill
-                                            else tab.iconResNormal
-                                        ),
-                                        contentDescription = ""
-                                    )
-                                }
-                            )
-                        }
+                Scaffold(
+                    bottomBar = {
+                        CustomizeNavigationBar(navController)
                     }
-                }) { innerPadding ->
+                ) { innerPadding ->
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
@@ -91,6 +63,43 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CustomizeNavigationBar(navController: NavController) {
+    NavigationBar {
+        Tab.entries.forEach { tab ->
+            val isSelected =
+                navController.currentDestination?.route == tab.title
+            NavigationBarItem(
+                label = { Text(tab.title) },
+                selected = isSelected,
+                onClick = {
+                    navController.navigate(tab.title) {
+                        // 避免 BackStack 增长，跳转页面时，将栈内 startDestination 之外的页面弹出
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            //出栈的 BackStack 保存状态
+                            saveState = true
+                        }
+                        // 避免点击同一个 Item 时反复入栈
+                        launchSingleTop = true
+
+                        // 如果之前出栈时保存状态了，那么重新入栈时恢复状态
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(
+                        painterResource(
+                            if (isSelected) tab.iconResFill
+                            else tab.iconResNormal
+                        ),
+                        contentDescription = ""
+                    )
+                }
+            )
         }
     }
 }
