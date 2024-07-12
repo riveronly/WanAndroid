@@ -36,7 +36,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 #覆盖bom使用material3的bate版本
-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+androidx-material3-beta = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 
 [plugins]

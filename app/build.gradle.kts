@@ -29,8 +29,8 @@ android {
             )
         }
         debug {
-            applicationIdSuffix = ".test"
-            versionNameSuffix = ".test"
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
         }
     }
     compileOptions {
@@ -63,10 +63,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.beta)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.paging.compose)
-    implementation(libs.material3)//覆盖bom使用material3的bate版本
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
     implementation(libs.kotlinx.serialization)
