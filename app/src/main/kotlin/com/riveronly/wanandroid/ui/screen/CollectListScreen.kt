@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -35,7 +37,6 @@ import com.riveronly.wanandroid.ui.activity.screen.ARTICLE_BEAN
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
-import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import kotlinx.coroutines.launch
@@ -91,27 +92,36 @@ fun CollectListScreen() {
             state = listState, modifier = Modifier.fillMaxSize()
         ) {
             items(items = collectListRes.value.datas) { item ->
-                Item(title = item.title, detail = item.author + ' ' + item.niceDate, accessory = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            loadingView.show()
-                            ApiService.unCollectInMine(item.id, item.originId)
-                            loadingView.dismiss()
-                            fetchApi()
+                ListItem(
+                    modifier = Modifier.clickable {
+                        val intent = Intent(view.context, ScreenActivity::class.java)
+                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                        startActivityLauncher.launch(intent)
+                    },
+                    headlineContent = {
+                        Text(item.title)
+                    },
+                    supportingContent = {
+                        Text(item.author + ' ' + item.niceDate)
+                    },
+                    trailingContent = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                loadingView.show()
+                                ApiService.unCollectInMine(item.id, item.originId)
+                                loadingView.dismiss()
+                                fetchApi()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.star_fill_24px
+                                ), contentDescription = ""
+                            )
                         }
-                    }) {
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.star_fill_24px
-                            ), contentDescription = ""
-                        )
                     }
-                }, onClick = {
-                    val intent = Intent(view.context, ScreenActivity::class.java)
-                    intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                    intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                    startActivityLauncher.launch(intent)
-                })
+                )
                 HorizontalDivider()
             }
         }

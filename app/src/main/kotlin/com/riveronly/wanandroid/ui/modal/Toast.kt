@@ -3,7 +3,6 @@ package com.riveronly.wanandroid.ui.modal
 import android.view.View
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
@@ -87,7 +86,6 @@ fun View.toast(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun View.toast(
     duration: Long = 1000,
     modalHostProvider: ModalHostProvider = DefaultModalHostProvider,

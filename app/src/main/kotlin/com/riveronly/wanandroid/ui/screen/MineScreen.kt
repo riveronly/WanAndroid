@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +43,6 @@ import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
-import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
 import kotlinx.coroutines.launch
@@ -126,21 +126,42 @@ fun MineScreen() {
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
-            Item(title = "我的积分", accessory = {
-                Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
-            })
+            ListItem(
+                headlineContent = {
+                    Text(text = "我的积分")
+                },
+                trailingContent = {
+                    Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
+                }
+            )
             HorizontalDivider()
-            Item(title = "我的收藏", accessory = { ArrowRightIcon() }, onClick = {
-                val intent = Intent(view.context, ScreenActivity::class.java)
-                intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
-                startActivityLauncher.launch(intent)
-            })
+            ListItem(
+                headlineContent = {
+                    Text(text = "我的收藏")
+                },
+                trailingContent = {
+                    ArrowRightIcon()
+                },
+                modifier = Modifier.clickable {
+                    val intent = Intent(view.context, ScreenActivity::class.java)
+                    intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
+                    startActivityLauncher.launch(intent)
+                }
+            )
             HorizontalDivider()
-            Item(title = "设置", accessory = { ArrowRightIcon() }, onClick = {
-                val intent = Intent(view.context, ScreenActivity::class.java)
-                intent.putExtra(SCREEN_NAME, Screens.Setting.route)
-                startActivityLauncher.launch(intent)
-            })
+            ListItem(
+                headlineContent = {
+                    Text(text = "设置")
+                },
+                trailingContent = {
+                    ArrowRightIcon()
+                },
+                modifier = Modifier.clickable {
+                    val intent = Intent(view.context, ScreenActivity::class.java)
+                    intent.putExtra(SCREEN_NAME, Screens.Setting.route)
+                    startActivityLauncher.launch(intent)
+                }
+            )
             HorizontalDivider()
         }
     }

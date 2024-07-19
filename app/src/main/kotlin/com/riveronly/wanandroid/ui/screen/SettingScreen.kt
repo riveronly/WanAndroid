@@ -1,6 +1,7 @@
 package com.riveronly.wanandroid.ui.screen
 
 import android.app.Activity
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,6 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -26,7 +28,6 @@ import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.helper.KVHelper
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
-import com.riveronly.wanandroid.ui.modal.Item
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.utils.LifecycleEffect
 import kotlinx.coroutines.launch
@@ -66,20 +67,26 @@ fun SettingScreen() {
             }
         })
         if (!localToken.value.isNullOrEmpty()) {
-            Item(title = "退出登录", accessory = {
-                Icon(
-                    painter = painterResource(id = R.drawable.logout_24px),
-                    contentDescription = ""
-                )
-            }, onClick = {
-                scope.launch {
-                    loadingView.show()
-                    viewModel.fetchLogout()
-                    loadingView.dismiss()
-                    localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
-                    activity?.finish()
+            ListItem(
+                modifier = Modifier.clickable {
+                    scope.launch {
+                        loadingView.show()
+                        viewModel.fetchLogout()
+                        loadingView.dismiss()
+                        localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
+                        activity?.finish()
+                    }
+                },
+                headlineContent = {
+                    Text("退出登录")
+                },
+                trailingContent = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.logout_24px),
+                        contentDescription = ""
+                    )
                 }
-            })
+            )
             HorizontalDivider()
         }
     }
