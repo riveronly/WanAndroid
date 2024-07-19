@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -88,37 +89,39 @@ class LoginActivity : ComponentActivity() {
                             .padding(innerPadding)
                             .padding(horizontal = 20.dp)
                     ) {
-                        // 用户名输入框
-                        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                            value = username,
-                            maxLines = 1,
-                            singleLine = true,
-                            onValueChange = { newValue -> username = newValue },
-                            label = { Text("用户名") })
+                        Column(Modifier.animateContentSize()) {
+                            // 用户名输入框
+                            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+                                value = username,
+                                maxLines = 1,
+                                singleLine = true,
+                                onValueChange = { newValue -> username = newValue },
+                                label = { Text("用户名") })
 
-                        // 密码输入框
-                        OutlinedTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            value = password,
-                            maxLines = 1,
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                            onValueChange = { newValue -> password = newValue },
-                            label = { Text("密码") },
-                            visualTransformation = PasswordVisualTransformation()
-                        )
-
-                        if (viewModel.isRegister) {
+                            // 密码输入框
                             OutlinedTextField(
                                 modifier = Modifier.fillMaxWidth(),
-                                value = passwordConfirm,
+                                value = password,
                                 maxLines = 1,
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                                onValueChange = { newValue -> passwordConfirm = newValue },
-                                label = { Text("确认密码") },
+                                onValueChange = { newValue -> password = newValue },
+                                label = { Text("密码") },
                                 visualTransformation = PasswordVisualTransformation()
                             )
+
+                            if (viewModel.isRegister) {
+                                OutlinedTextField(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    value = passwordConfirm,
+                                    maxLines = 1,
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                                    onValueChange = { newValue -> passwordConfirm = newValue },
+                                    label = { Text("确认密码") },
+                                    visualTransformation = PasswordVisualTransformation()
+                                )
+                            }
                         }
 
                         // 登录按钮
@@ -174,7 +177,7 @@ class LoginActivity : ComponentActivity() {
                             }) {
                             Text(
                                 fontSize = 16.sp,
-                                text = if (viewModel.isRegister) "已有账号？去登录" else "没有账号？去注册"
+                                text = if (viewModel.isRegister) "←已有账号？去登录" else "没有账号？去注册→"
                             )
                         }
                     }
