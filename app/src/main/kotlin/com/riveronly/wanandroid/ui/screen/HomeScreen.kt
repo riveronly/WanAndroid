@@ -38,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -102,13 +103,24 @@ fun HomeScreen() {
         }
     }
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    val minAnimationDuration = 1000L
     PullToRefreshBox(
         state = pullToRefreshState,
-        isRefreshing = false,
+        isRefreshing = isRefreshing,
         onRefresh = {
             scope.launch {
+                isRefreshing = true
+                val startTime = System.currentTimeMillis()
+
                 pagingItems.refresh()
-                pullToRefreshState.animateToHidden()
+
+                val elapsedTime = System.currentTimeMillis() - startTime
+                // 如果请求时间小于最小动画时长，则延迟剩余时间
+                if (elapsedTime < minAnimationDuration) {
+                    delay(minAnimationDuration - elapsedTime)
+                }
+                isRefreshing = false
             }
         }) {
         LazyColumn(

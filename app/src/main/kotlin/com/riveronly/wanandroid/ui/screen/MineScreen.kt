@@ -15,16 +15,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,13 +48,14 @@ import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
-import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.ui.modal.toast
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
  * 我的
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("ResourceType")
 @Composable
 fun MineScreen() {
@@ -57,7 +63,6 @@ fun MineScreen() {
     val scope = rememberCoroutineScope()
     val view = LocalView.current
     val context = LocalContext.current
-    val loadingView = view.loadingModal()
     val localToken = remember {
         mutableStateOf(KVHelper.getStringSet(LOCAL_TOKEN))
     }
@@ -65,13 +70,11 @@ fun MineScreen() {
     fun checkLoginStatus() {
         scope.launch {
             localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
-            loadingView.show()
-            if (localToken.value.isNullOrEmpty()) {
-                viewModel.fetchLogout()
-            } else {
+            if (!localToken.value.isNullOrEmpty()) {
                 viewModel.fetchUserinfo()
+            } else {
+                viewModel.fetchLogout()
             }
-            loadingView.dismiss()
         }
     }
 
@@ -85,84 +88,109 @@ fun MineScreen() {
         checkLoginStatus()
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable {
-                    if (viewModel.userInfoRes.userInfo.id == 0) {
-                        val intent = Intent(context, LoginActivity::class.java)
-                        startActivityLauncher.launch(intent)
-                    } else {
-                        scope.launch {
-                            viewModel
-                                .fetchCoin()
-                                .collect {
-                                    if (it) {
-                                        view.toast("今日已签到")
-                                    }
-                                }
-                        }
-                    }
+    val pullToRefreshState = rememberPullToRefreshState()
+    var isRefreshing by remember { mutableStateOf(false) }
+    val minAnimationDuration = 1000L
+    PullToRefreshBox(isRefreshing,
+        state = pullToRefreshState,
+        onRefresh = {
+            scope.launch {
+                isRefreshing = true
+                val startTime = System.currentTimeMillis()
+
+                checkLoginStatus()
+
+                val elapsedTime = System.currentTimeMillis() - startTime
+                // 如果请求时间小于最小动画时长，则延迟剩余时间
+                if (elapsedTime < minAnimationDuration) {
+                    delay(minAnimationDuration - elapsedTime)
                 }
-                .padding(10.dp)) {
-            Icon(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(48.dp),
-                painter = painterResource(id = R.drawable.face_24px),
-                contentDescription = "",
-                tint = Color.White
-            )
-            Text(text = viewModel.userInfoRes.userInfo.nickname.takeIf { it.isNotBlank() }
-                ?: "请登录", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.Bold)
-        }
+                isRefreshing = false
+            }
+        }) {
         Column(
             modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .fillMaxSize()
         ) {
-            ListItem(
-                headlineContent = {
-                    Text(text = "我的积分")
-                },
-                trailingContent = {
-                    Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
-                }
-            )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = {
-                    Text(text = "我的收藏")
-                },
-                trailingContent = {
-                    ArrowRightIcon()
-                },
-                modifier = Modifier.clickable {
-                    val intent = Intent(view.context, ScreenActivity::class.java)
-                    intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
-                    startActivityLauncher.launch(intent)
-                }
-            )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = {
-                    Text(text = "设置")
-                },
-                trailingContent = {
-                    ArrowRightIcon()
-                },
-                modifier = Modifier.clickable {
-                    val intent = Intent(view.context, ScreenActivity::class.java)
-                    intent.putExtra(SCREEN_NAME, Screens.Setting.route)
-                    startActivityLauncher.launch(intent)
-                }
-            )
-            HorizontalDivider()
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable {
+                        if (viewModel.userInfoRes.userInfo.id == 0) {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivityLauncher.launch(intent)
+                        } else {
+                            scope.launch {
+                                viewModel
+                                    .fetchCoin()
+                                    .collect {
+                                        if (it) {
+                                            view.toast("签到成功")
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                    .padding(10.dp)) {
+                Icon(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(48.dp),
+                    painter = painterResource(id = R.drawable.face_24px),
+                    contentDescription = "",
+                    tint = Color.White
+                )
+                Text(text = viewModel.userInfoRes.userInfo.nickname.takeIf { it.isNotBlank() }
+                    ?: "请登录",
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold)
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                ListItem(
+                    headlineContent = {
+                        Text(text = "我的积分")
+                    },
+                    trailingContent = {
+                        Text(text = "${viewModel.userInfoRes.coinInfo.coinCount}")
+                    }
+                )
+                HorizontalDivider()
+                ListItem(
+                    headlineContent = {
+                        Text(text = "我的收藏")
+                    },
+                    trailingContent = {
+                        ArrowRightIcon()
+                    },
+                    modifier = Modifier.clickable {
+                        val intent = Intent(view.context, ScreenActivity::class.java)
+                        intent.putExtra(SCREEN_NAME, Screens.CollectList.route)
+                        startActivityLauncher.launch(intent)
+                    }
+                )
+                HorizontalDivider()
+                ListItem(
+                    headlineContent = {
+                        Text(text = "设置")
+                    },
+                    trailingContent = {
+                        ArrowRightIcon()
+                    },
+                    modifier = Modifier.clickable {
+                        val intent = Intent(view.context, ScreenActivity::class.java)
+                        intent.putExtra(SCREEN_NAME, Screens.Setting.route)
+                        startActivityLauncher.launch(intent)
+                    }
+                )
+                HorizontalDivider()
+            }
         }
     }
 }

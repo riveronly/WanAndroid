@@ -33,7 +33,10 @@ class ScreenActivity : ComponentActivity() {
 
         val screenName = intent.getStringExtra(SCREEN_NAME) ?: ""
         val articleBeanJson = intent.getStringExtra(ARTICLE_BEAN) ?: ""
-        val articleBean by lazy { Json.decodeFromString<ArticleListBean.Data>(articleBeanJson) }
+        val json = Json {
+            ignoreUnknownKeys = true
+        }
+        val articleBean by lazy { json.decodeFromString<ArticleListBean.Data>(articleBeanJson) }
 
         setContent {
             WanAndroidTheme {

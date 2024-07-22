@@ -19,8 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
@@ -36,6 +39,7 @@ import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.paging.PlazaPagingSource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -69,13 +73,24 @@ fun PlazaScreen() {
             text = "近期分享",
             fontSize = 18.sp
         )
+        var isRefreshing by remember { mutableStateOf(false) }
+        val minAnimationDuration = 1000L
         PullToRefreshBox(
             state = pullToRefreshState,
-            isRefreshing = false,
+            isRefreshing = isRefreshing,
             onRefresh = {
                 scope.launch {
+                    isRefreshing = true
+                    val startTime = System.currentTimeMillis()
+
                     pagingItems.refresh()
-                    pullToRefreshState.animateToHidden()
+
+                    val elapsedTime = System.currentTimeMillis() - startTime
+                    // 如果请求时间小于最小动画时长，则延迟剩余时间
+                    if (elapsedTime < minAnimationDuration) {
+                        delay(minAnimationDuration - elapsedTime)
+                    }
+                    isRefreshing = false
                 }
             }) {
             LazyColumn(
