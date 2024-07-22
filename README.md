@@ -1,9 +1,8 @@
-# Jetpack Compose的material3风格的玩安卓客户端
+# 玩安卓Compose版
 
 API from https://www.wanandroid.com
 
 ## 主要功能
-
 - 轮播图
 - 注册、登入、签到、登出
 - 浏览文章、收藏文章
@@ -12,7 +11,6 @@ API from https://www.wanandroid.com
 - 适配深色模式
 
 ## 第三方库
-
 - kotlin 2.0
 - splashScreen
 - navigation
