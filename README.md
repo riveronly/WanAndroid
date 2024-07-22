@@ -1,13 +1,11 @@
 # 玩安卓Compose版
 
-API from https://www.wanandroid.com
-
 ## 主要功能
-- 轮播图
+- 首页轮播图
 - 注册、登入、签到、登出
 - 浏览文章、收藏文章
 - 下拉刷新、上拉加载
-- 管理我的收藏列表
+- 个人收藏列表
 - 适配深色模式
 
 ## 第三方库
@@ -15,7 +13,7 @@ API from https://www.wanandroid.com
 - splashScreen
 - navigation
 - material3
-- paging
+- paging3
 - pullToRefresh
 - mmkv
 - retrofit
