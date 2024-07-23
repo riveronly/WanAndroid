@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.helper.KVHelper
+import com.riveronly.wanandroid.helper.MMKVHelper
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
@@ -64,12 +64,12 @@ fun MineScreen() {
     val view = LocalView.current
     val context = LocalContext.current
     val localToken = remember {
-        mutableStateOf(KVHelper.getStringSet(LOCAL_TOKEN))
+        mutableStateOf(MMKVHelper.getStringSet(LOCAL_TOKEN))
     }
 
     fun checkLoginStatus() {
         scope.launch {
-            localToken.value = KVHelper.getStringSet(LOCAL_TOKEN)
+            localToken.value = MMKVHelper.getStringSet(LOCAL_TOKEN)
             if (!localToken.value.isNullOrEmpty()) {
                 viewModel.fetchUserinfo()
             } else {
