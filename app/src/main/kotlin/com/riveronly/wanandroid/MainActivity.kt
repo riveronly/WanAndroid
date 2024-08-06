@@ -8,20 +8,15 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.riveronly.wanandroid.Tab.Home
-import com.riveronly.wanandroid.Tab.Mine
-import com.riveronly.wanandroid.Tab.Plaza
+import com.riveronly.wanandroid.Tab.*
 import com.riveronly.wanandroid.ui.screen.HomeScreen
 import com.riveronly.wanandroid.ui.screen.MineScreen
 import com.riveronly.wanandroid.ui.screen.PlazaScreen
@@ -52,7 +47,7 @@ class MainActivity : ComponentActivity() {
                 )
                 val scope = rememberCoroutineScope()
                 val currentPagerIndex = pagerState.currentPage
-                val isInitList =
+                val isInitList by
                     rememberSaveable {
                         mutableStateOf(BooleanArray(Tab.entries.size) { index -> index == currentPagerIndex })
                     }
@@ -67,7 +62,7 @@ class MainActivity : ComponentActivity() {
                                     selected = isSelected,
                                     onClick = {
                                         scope.launch {
-                                            isInitList.value[index] = true
+                                            isInitList[index] = true
                                             pagerState.scrollToPage(index)
                                         }
                                     },
@@ -91,7 +86,7 @@ class MainActivity : ComponentActivity() {
                         state = pagerState,
                         beyondViewportPageCount = Tab.entries.size,
                     ) { index ->
-                        if (isInitList.value[index]) {
+                        if (isInitList[index]) {
                             when (Tab.entries[index]) {
                                 Home -> HomeScreen()
                                 Plaza -> PlazaScreen()

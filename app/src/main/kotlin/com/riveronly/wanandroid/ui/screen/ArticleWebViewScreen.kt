@@ -7,17 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,10 +28,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
-    val article = remember { mutableStateOf(articleBean) }
+    var article by remember { mutableStateOf(articleBean) }
     val view = LocalView.current
     val loadingView = view.loadingModal()
-    val state = rememberWebViewState(article.value.link)
+    val state = rememberWebViewState(article.link)
     val navigator = rememberWebViewNavigator()
     val scope = rememberCoroutineScope()
     val activity = (LocalContext.current as? Activity)
@@ -49,7 +40,7 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(
-                text = article.value.title, maxLines = 1, overflow = TextOverflow.Ellipsis
+                text = article.title, maxLines = 1, overflow = TextOverflow.Ellipsis
             )
         }, navigationIcon = {
             IconButton(onClick = {
@@ -67,18 +58,18 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
             IconButton(onClick = {
                 scope.launch {
                     loadingView.show()
-                    if (article.value.collect) {
-                        ApiService.unCollect(article.value.id)
+                    if (article.collect) {
+                        ApiService.unCollect(article.id)
                     } else {
-                        ApiService.collect(article.value.id)
+                        ApiService.collect(article.id)
                     }
-                    article.value = article.value.copy(collect = !article.value.collect)
+                    article = article.copy(collect = !article.collect)
                     loadingView.dismiss()
                 }
             }) {
                 Icon(
                     painter = painterResource(
-                        id = if (article.value.collect) R.drawable.star_fill_24px
+                        id = if (article.collect) R.drawable.star_fill_24px
                         else R.drawable.star_24px
                     ), contentDescription = ""
                 )

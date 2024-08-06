@@ -13,18 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -51,7 +41,7 @@ fun CollectListScreen() {
     val loadingView = view.loadingModal()
     val scope = rememberCoroutineScope()
     val activity = (LocalContext.current as? Activity)
-    val collectListRes = remember { mutableStateOf(CollectBean()) }
+    var collectListRes by remember { mutableStateOf(CollectBean()) }
     val listState = rememberLazyListState()
     val startActivityLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -63,7 +53,7 @@ fun CollectListScreen() {
         val collectList = ApiService.collectList(0)
         loadingView.dismiss()
         if (collectList.errorCode == 0 && collectList.data != null) {
-            collectListRes.value = collectList.data
+            collectListRes = collectList.data
         } else {
             view.toast(collectList.errorMsg)
         }
@@ -91,7 +81,7 @@ fun CollectListScreen() {
         LazyColumn(
             state = listState, modifier = Modifier.fillMaxSize()
         ) {
-            items(items = collectListRes.value.datas) { item ->
+            items(items = collectListRes.datas) { item ->
                 ListItem(
                     modifier = Modifier.clickable {
                         val intent = Intent(view.context, ScreenActivity::class.java)
