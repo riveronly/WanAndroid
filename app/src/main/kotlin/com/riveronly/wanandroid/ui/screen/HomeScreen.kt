@@ -146,8 +146,8 @@ fun HomeScreen() {
         }
         if (listState.canScrollBackward) {
             ListToTopButton(onClick = {
-                if (listState.firstVisibleItemIndex >= 1) {
-                    listState.requestScrollToItem(1)
+                if (listState.firstVisibleItemIndex >= 3) {
+                    listState.requestScrollToItem(3)
                 }
                 scope.launch {
                     listState.animateScrollToItem(0)
