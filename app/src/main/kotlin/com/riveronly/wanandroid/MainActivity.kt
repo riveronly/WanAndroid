@@ -16,22 +16,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.riveronly.wanandroid.Tab.*
 import com.riveronly.wanandroid.ui.screen.HomeScreen
 import com.riveronly.wanandroid.ui.screen.MineScreen
 import com.riveronly.wanandroid.ui.screen.PlazaScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import kotlinx.coroutines.launch
-
-enum class Tab(
-    val title: String,
-    @DrawableRes val iconResNormal: Int,
-    @DrawableRes val iconResFill: Int,
-) {
-    Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
-    Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
-    Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
-}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +31,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             WanAndroidTheme {
                 val pagerState = rememberPagerState(
-                    initialPage = Mine.ordinal,
+                    initialPage = Tab.Mine.ordinal,
                     pageCount = { Tab.entries.size }
                 )
                 val scope = rememberCoroutineScope()
                 val currentPagerIndex = pagerState.currentPage
                 val isInitList by
-                    rememberSaveable {
-                        mutableStateOf(BooleanArray(Tab.entries.size) { index -> index == currentPagerIndex })
-                    }
+                rememberSaveable {
+                    mutableStateOf(BooleanArray(Tab.entries.size) { index -> index == currentPagerIndex })
+                }
 
                 Scaffold(
                     bottomBar = {
@@ -88,14 +77,24 @@ class MainActivity : ComponentActivity() {
                     ) { index ->
                         if (isInitList[index]) {
                             when (Tab.entries[index]) {
-                                Home -> HomeScreen()
-                                Plaza -> PlazaScreen()
-                                Mine -> MineScreen()
+                                Tab.Home -> HomeScreen()
+                                Tab.Plaza -> PlazaScreen()
+                                Tab.Mine -> MineScreen()
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    enum class Tab(
+        val title: String,
+        @DrawableRes val iconResNormal: Int,
+        @DrawableRes val iconResFill: Int,
+    ) {
+        Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
+        Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
+        Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
     }
 }
