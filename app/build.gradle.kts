@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.*
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -5,16 +8,19 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinSerialization)
 }
 
+val configProperties = Properties()
+configProperties.load(FileInputStream(rootProject.file("config.properties")))
+
 android {
     namespace = "com.riveronly.wanandroid"
-    compileSdk = 34
+    compileSdk = configProperties.getProperty("compileSdk").toInt()
 
     defaultConfig {
         applicationId = namespace
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = configProperties.getProperty("minSdk").toInt()
+        targetSdk = configProperties.getProperty("targetSdk").toInt()
+        versionCode = configProperties.getProperty("versionCode").toInt()
+        versionName = configProperties.getProperty("versionName")
 
         vectorDrawables {
             useSupportLibrary = true
@@ -24,13 +30,15 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            manifestPlaceholders["app_name_value"] = "玩安卓"
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["app_name_value"] = "玩安卓dev"
         }
     }
     compileOptions {
