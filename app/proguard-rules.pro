@@ -24,7 +24,6 @@
 -dontshrink                                                                     # 关闭压缩
 -dontpreverify                                                                  # 关闭预校验(作用于Java平台，Android不需要，去掉可加快混淆)
 -dontoptimize                                                                   # 关闭代码优化
-#-dontobfuscate                                                                  # 关闭混淆
 -ignorewarnings                                                                 # 忽略警告
 -dontusemixedcaseclassnames                                                     # 混淆后类型都为小写
 -dontskipnonpubliclibraryclasses                                                # 不跳过非公共的库的类
