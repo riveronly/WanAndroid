@@ -3,10 +3,10 @@ import java.io.FileInputStream
 import java.util.*
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.jetbrainsKotlinCompose)
-    alias(libs.plugins.jetbrainsKotlinSerialization)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val configProperties = Properties()
