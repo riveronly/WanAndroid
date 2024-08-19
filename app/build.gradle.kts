@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.io.FileInputStream
 import java.util.*
 
@@ -10,6 +11,9 @@ plugins {
 
 val configProperties = Properties()
 configProperties.load(FileInputStream(rootProject.file("config.properties")))
+
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(rootProject.file("keystore.properties")))
 
 android {
     namespace = "com.riveronly.wanandroid"
@@ -27,18 +31,42 @@ android {
         }
     }
 
+    signingConfigs {
+        create("config") {
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storePassword = keystoreProperties.getProperty("keyStorePassword")
+            storeFile = file(keystoreProperties.getProperty("storeFile"))
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
-            manifestPlaceholders["app_name_value"] = "玩安卓"
+            isDebuggable = false
+            // 启用代码压缩、优化及混淆
+            isMinifyEnabled = true
+            // 启用资源压缩，需配合 minifyEnabled=true 使用
+            isShrinkResources = true
+            // 指定混淆保留规则
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("config")
+            manifestPlaceholders["app_name_value"] = "玩安卓"
         }
         debug {
+            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("config")
+            manifestPlaceholders["app_name_value"] = "玩安卓dev"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            manifestPlaceholders["app_name_value"] = "玩安卓dev"
         }
     }
     compileOptions {
@@ -48,6 +76,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    kotlin {
+        jvmToolchain(17)
+    }
     buildFeatures {
         compose = true
     }
@@ -56,6 +87,21 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    applicationVariants.all {
+        outputs.all {
+            if (this is BaseVariantOutputImpl) {
+                val flavorName = if (productFlavors.isEmpty()) "" else "-${productFlavors.first().name}"
+                val name = "wan-${buildType.name}-${versionName}${flavorName}.apk"
+                outputFileName = name
+            }
+        }
+    }
+
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
 }
 
 dependencies {
