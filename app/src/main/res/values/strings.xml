@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">玩安卓</string>
     <string name="profile">profile</string>
     <string name="friends">friends</string>
+    <string name="press_twice_exit">再返回一次退出</string>
 </resources>
