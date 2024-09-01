@@ -32,12 +32,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
-        //双击返回键回退桌面
+        //连续两次返回退到桌面
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (System.currentTimeMillis() - exitTime > 2000) {
                     exitTime = System.currentTimeMillis()
-                    val msg = getString(R.string.press_twice_exit)
+                    val msg = getString(R.string.back_twice_to_launcher)
                     Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
                 } else {
                     moveTaskToBack(true)
