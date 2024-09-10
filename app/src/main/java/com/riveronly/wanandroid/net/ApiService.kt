@@ -1,19 +1,7 @@
 package com.riveronly.wanandroid.net
 
-import com.riveronly.wanandroid.bean.ArticleListBean
-import com.riveronly.wanandroid.bean.BannerItemBean
-import com.riveronly.wanandroid.bean.BaseResponse
-import com.riveronly.wanandroid.bean.CoinBean
-import com.riveronly.wanandroid.bean.CollectBean
-import com.riveronly.wanandroid.bean.LoginBean
-import com.riveronly.wanandroid.bean.RegisterBean
-import com.riveronly.wanandroid.bean.UserArticleBean
-import com.riveronly.wanandroid.bean.UserInfoBean
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import com.riveronly.wanandroid.bean.*
+import retrofit2.http.*
 
 interface ApiService {
     companion object : ApiService by RetrofitBuilder.service

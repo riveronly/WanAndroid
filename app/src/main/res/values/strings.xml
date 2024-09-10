@@ -2,4 +2,5 @@
     <string name="profile">profile</string>
     <string name="friends">friends</string>
     <string name="back_twice_to_launcher">再返回一次回到桌面</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

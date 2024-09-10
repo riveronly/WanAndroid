@@ -2,7 +2,7 @@ package com.riveronly.wanandroid.helper
 
 import android.os.Parcelable
 import com.tencent.mmkv.MMKV
-import java.util.Collections
+import java.util.*
 
 /**
  * MMKV工具类
