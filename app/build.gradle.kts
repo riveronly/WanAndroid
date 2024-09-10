@@ -128,7 +128,7 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.retrofit)
     implementation(libs.retrofit.serialization)
-    implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlin.serialization)
     implementation(libs.coil.compose)
     implementation(libs.tencent.mmkv)
     implementation(libs.github.compose.webview)
