@@ -1,10 +1,10 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.0"
 datastorePreferences = "1.1.1"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
 splashScreen = "1.0.1"
-composeBom = "2024.09.00"
+composeBom = "2024.09.01"
 activityCompose = "1.9.2"
 navigationCompose = "2.8.0"
 pagingCompose = "3.3.2"
