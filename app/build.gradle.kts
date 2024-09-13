@@ -104,7 +104,6 @@ android {
 }
 
 composeCompiler {
-    enableStrongSkippingMode = true
 }
 
 dependencies {
