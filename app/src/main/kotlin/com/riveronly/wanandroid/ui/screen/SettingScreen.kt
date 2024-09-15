@@ -34,13 +34,12 @@ fun SettingScreen() {
     var localToken by remember {
         mutableStateOf(DataStoreHelper.getStringSet(LOCAL_TOKEN))
     }
-    var isShowFooter = false
+    var isShowLogout by remember { mutableStateOf(false) }
 
     LifecycleEffect(onResume = {
         scope.launch {
-            localToken = DataStoreHelper.getStringSet(LOCAL_TOKEN)
             localToken.collect {
-                isShowFooter = it.isNotEmpty()
+                isShowLogout = it.isNotEmpty()
             }
         }
     })
@@ -61,7 +60,7 @@ fun SettingScreen() {
                 )
             }
         })
-        if (isShowFooter) {
+        if (isShowLogout) {
             ListItem(
                 modifier = Modifier.clickable {
                     scope.launch {
