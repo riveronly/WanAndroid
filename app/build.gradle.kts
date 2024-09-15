@@ -1,6 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import java.io.FileInputStream
-import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
@@ -94,8 +93,7 @@ android {
             if (this is BaseVariantOutputImpl) {
                 val appName = buildType.manifestPlaceholders["app_name_value"] ?: "wan"
                 val flavorName = if (productFlavors.isEmpty()) "" else "-${productFlavors.first().name}"
-                val currentDateTime = SimpleDateFormat("MMdd-HHmm").format(Date())
-                outputFileName = "${appName}-${buildType.name}-${versionName}${flavorName}-${currentDateTime}.apk"
+                outputFileName = "${appName}-${buildType.name}-${versionName}${flavorName}.apk"
             }
         }
     }
