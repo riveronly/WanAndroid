@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.riveronly.wanandroid.bean.UserInfoBean
-import com.riveronly.wanandroid.helper.MMKVHelper
+import com.riveronly.wanandroid.helper.DataStoreHelper
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import kotlinx.coroutines.flow.flow
@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
      */
     suspend fun fetchLogout() {
         ApiService.logout()
-        MMKVHelper.removeKey(LOCAL_TOKEN)
+        DataStoreHelper.removeKey(LOCAL_TOKEN)
         userInfoRes = UserInfoBean()
     }
 

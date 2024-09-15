@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.helper.MMKVHelper
+import com.riveronly.wanandroid.helper.DataStoreHelper
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.activity.login.LoginActivity
 import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
@@ -47,16 +47,18 @@ fun MineScreen() {
     val view = LocalView.current
     val context = LocalContext.current
     var localToken by remember {
-        mutableStateOf(MMKVHelper.getStringSet(LOCAL_TOKEN))
+        mutableStateOf(DataStoreHelper.getStringSet(LOCAL_TOKEN))
     }
 
     fun checkLoginStatus() {
         scope.launch {
-            localToken = MMKVHelper.getStringSet(LOCAL_TOKEN)
-            if (!localToken.isNullOrEmpty()) {
-                viewModel.fetchUserinfo()
-            } else {
-                viewModel.fetchLogout()
+            localToken = DataStoreHelper.getStringSet(LOCAL_TOKEN)
+            localToken.collect {
+                if (it.isEmpty()) {
+                    viewModel.fetchLogout()
+                } else {
+                    viewModel.fetchUserinfo()
+                }
             }
         }
     }

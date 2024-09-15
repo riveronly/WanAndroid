@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.riveronly.wanandroid.MainViewModel
 import com.riveronly.wanandroid.R
-import com.riveronly.wanandroid.helper.MMKVHelper
+import com.riveronly.wanandroid.helper.DataStoreHelper
 import com.riveronly.wanandroid.net.RetrofitBuilder.LOCAL_TOKEN
 import com.riveronly.wanandroid.ui.modal.loadingModal
 import com.riveronly.wanandroid.utils.LifecycleEffect
@@ -32,12 +32,16 @@ fun SettingScreen() {
     val loadingView = view.loadingModal()
     val activity = (LocalContext.current as? Activity)
     var localToken by remember {
-        mutableStateOf(MMKVHelper.getStringSet(LOCAL_TOKEN))
+        mutableStateOf(DataStoreHelper.getStringSet(LOCAL_TOKEN))
     }
+    var isShowFooter = false
 
     LifecycleEffect(onResume = {
         scope.launch {
-            localToken = MMKVHelper.getStringSet(LOCAL_TOKEN)
+            localToken = DataStoreHelper.getStringSet(LOCAL_TOKEN)
+            localToken.collect {
+                isShowFooter = it.isNotEmpty()
+            }
         }
     })
 
@@ -57,14 +61,14 @@ fun SettingScreen() {
                 )
             }
         })
-        if (!localToken.isNullOrEmpty()) {
+        if (isShowFooter) {
             ListItem(
                 modifier = Modifier.clickable {
                     scope.launch {
                         loadingView.show()
                         viewModel.fetchLogout()
                         loadingView.dismiss()
-                        localToken = MMKVHelper.getStringSet(LOCAL_TOKEN)
+                        localToken = DataStoreHelper.getStringSet(LOCAL_TOKEN)
                         activity?.finish()
                     }
                 },

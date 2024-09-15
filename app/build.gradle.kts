@@ -127,6 +127,5 @@ dependencies {
     implementation(libs.retrofit.serialization)
     implementation(libs.kotlin.serialization)
     implementation(libs.coil.compose)
-    implementation(libs.tencent.mmkv)
     implementation(libs.github.compose.webview)
 }
