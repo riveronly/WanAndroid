@@ -15,7 +15,7 @@
 - material3
 - paging3
 - pullToRefresh
-- mmkv
+- datastore
 - retrofit
 - kotlinx-Serialization
 - coil
