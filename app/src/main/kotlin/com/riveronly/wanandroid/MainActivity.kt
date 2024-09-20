@@ -22,6 +22,7 @@ import com.riveronly.wanandroid.ui.screen.HomeScreen
 import com.riveronly.wanandroid.ui.screen.MineScreen
 import com.riveronly.wanandroid.ui.screen.PlazaScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
+import com.riveronly.wanandroid.ui.web.WebViewManager
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -30,8 +31,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView()
         installSplashScreen()
         enableEdgeToEdge()
+
         //连续两次返回退到桌面
         onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -44,7 +47,26 @@ class MainActivity : ComponentActivity() {
                 }
             }
         })
+        //webView预加载
+        WebViewManager.prepare(applicationContext)
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        WebViewManager.destroy()
+    }
+
+    enum class Tab(
+        val title: String,
+        @DrawableRes val iconResNormal: Int,
+        @DrawableRes val iconResFill: Int,
+    ) {
+        Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
+        Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
+        Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
+    }
+
+    private fun setContentView() {
         setContent {
             WanAndroidTheme {
                 val pagerState = rememberPagerState(
@@ -103,15 +125,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    enum class Tab(
-        val title: String,
-        @DrawableRes val iconResNormal: Int,
-        @DrawableRes val iconResFill: Int,
-    ) {
-        Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
-        Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
-        Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
     }
 }

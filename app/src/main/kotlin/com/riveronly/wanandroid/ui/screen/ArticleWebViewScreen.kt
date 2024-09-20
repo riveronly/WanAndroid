@@ -3,7 +3,6 @@ package com.riveronly.wanandroid.ui.screen
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -14,14 +13,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.kevinnzou.web.LoadingState
-import com.kevinnzou.web.WebView
-import com.kevinnzou.web.rememberWebViewNavigator
-import com.kevinnzou.web.rememberWebViewState
 import com.riveronly.wanandroid.R
 import com.riveronly.wanandroid.bean.ArticleListBean
 import com.riveronly.wanandroid.net.ApiService
 import com.riveronly.wanandroid.ui.modal.loadingModal
+import com.riveronly.wanandroid.ui.web.WebView
+import com.riveronly.wanandroid.ui.web.rememberWebViewNavigator
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -31,11 +28,10 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
     var article by remember { mutableStateOf(articleBean) }
     val view = LocalView.current
     val loadingView = view.loadingModal()
-    val state = rememberWebViewState(article.link)
     val navigator = rememberWebViewNavigator()
     val scope = rememberCoroutineScope()
-    val activity = (LocalContext.current as? Activity)
-    val loadingState = state.loadingState
+    val context = LocalContext.current
+    val activity = context as Activity
 
     Scaffold(topBar = {
         TopAppBar(title = {
@@ -44,11 +40,7 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
             )
         }, navigationIcon = {
             IconButton(onClick = {
-                if (navigator.canGoBack) {
-                    navigator.navigateBack()
-                } else {
-                    activity?.finish()
-                }
+                navigator.navigateBack()
             }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back"
@@ -77,16 +69,13 @@ fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
         })
     }) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            if (loadingState is LoadingState.Loading) {
-                LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth(),
-                    progress = { loadingState.progress },
-                )
-            }
             WebView(
                 modifier = Modifier.weight(1f),
-                state = state,
-                navigator = navigator
+                url = article.link,
+                navigator = navigator,
+                onNavigateUp = {
+                    activity.finish()
+                }
             )
         }
     }
