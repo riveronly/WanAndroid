@@ -241,7 +241,7 @@ class WebViewNavigator(
         onForward: () -> Unit = {},
         reload: () -> Unit = {},
     ) = withContext(Dispatchers.Main) {
-        navigationEvents.debounce(350).collect { event ->
+        navigationEvents.debounce(0).collect { event ->
             when (event) {
                 NavigationEvent.Back -> onBack()
                 NavigationEvent.Forward -> onForward()
