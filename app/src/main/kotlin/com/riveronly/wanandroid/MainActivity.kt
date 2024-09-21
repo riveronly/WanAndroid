@@ -81,7 +81,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WanAndroidTheme {
                 val pagerState = rememberPagerState(
-                    initialPage = Tab.Mine.ordinal,
+                    initialPage = Tab.Home.ordinal,
                     pageCount = { Tab.entries.size }
                 )
                 val scope = rememberCoroutineScope()
