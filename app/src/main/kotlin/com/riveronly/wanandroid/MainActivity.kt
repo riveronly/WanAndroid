@@ -23,6 +23,7 @@ import com.riveronly.wanandroid.ui.screen.MineScreen
 import com.riveronly.wanandroid.ui.screen.PlazaScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import com.riveronly.wanandroid.ui.web.WebViewManager
+import com.riveronly.wanandroid.utils.PermissionsHelper
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -49,6 +50,16 @@ class MainActivity : ComponentActivity() {
         })
         //webView预加载
         WebViewManager.prepare(applicationContext)
+        //必要权限申请
+        PermissionsHelper.init(this)
+            .requestStoragePermission(
+                onGranted = {
+
+                },
+                onDenied = {
+
+                }
+            )
     }
 
     override fun onDestroy() {
