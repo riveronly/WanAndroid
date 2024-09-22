@@ -6,7 +6,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,7 +30,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -64,11 +70,8 @@ fun HomeScreen() {
     val pager = remember {
         Pager(
             config = PagingConfig(
-                pageSize = 20,
-                prefetchDistance = 8
-            ),
-            pagingSourceFactory = { HomePagingSource() }
-        )
+                pageSize = 20, prefetchDistance = 8
+            ), pagingSourceFactory = { HomePagingSource() })
     }
     val pagingItems = pager.flow.collectAsLazyPagingItems()
     val pullToRefreshState = rememberPullToRefreshState()
@@ -86,9 +89,7 @@ fun HomeScreen() {
     var isRefreshing by remember { mutableStateOf(false) }
     val minAnimationDuration = 1000L
     PullToRefreshBox(
-        state = pullToRefreshState,
-        isRefreshing = isRefreshing,
-        onRefresh = {
+        state = pullToRefreshState, isRefreshing = isRefreshing, onRefresh = {
             scope.launch {
                 isRefreshing = true
                 val startTime = System.currentTimeMillis()
@@ -111,33 +112,76 @@ fun HomeScreen() {
             }
             items(pagingItems.itemCount) {
                 val item = pagingItems[it] ?: return@items
-                ListItem(
-                    modifier = Modifier.clickable {
-                        val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                        intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                        startActivityLauncher.launch(intent)
-                    },
-                    headlineContent = {
-                        Text(text = item.title)
-                    },
-                    trailingContent = {
-                        Text(text = item.niceDate)
-                    },
-                    supportingContent = {
-                        Text(text = item.author.takeIf { author -> author.isNotBlank() }
-                            ?: item.shareUser)
-                    }
-                )
-                HorizontalDivider()
+                val paddingSurface = 10.dp
+                Surface(
+                    modifier = Modifier.padding(
+                        start = paddingSurface,
+                        end = paddingSurface,
+                        top = if (it == 0) paddingSurface else 0.dp,
+                        bottom = paddingSurface
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                ) {
+                    ListItem(
+                        modifier = Modifier
+                            .clickable {
+                                val intent = Intent(view.context, ScreenActivity::class.java)
+                                intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                                intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                                startActivityLauncher.launch(intent)
+                            }, overlineContent = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .padding(end = 5.dp)
+                                        .size(24.dp),
+                                    painter = painterResource(id = R.drawable.face_24px),
+                                    contentDescription = "",
+                                    tint = Color.Black
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column {
+                                        Text(
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            text = item.author.takeIf { author -> author.isNotBlank() }
+                                                ?: item.shareUser)
+                                        Text(text = item.niceShareDate)
+                                    }
+                                    Text(
+                                        modifier = Modifier
+                                            .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
+                                            .padding(vertical = 1.dp)
+                                            .width(50.dp),
+                                        text = item.superChapterName,
+                                        textAlign = TextAlign.Center,
+                                    )
+                                }
+
+                            }
+                        }, headlineContent = {
+                            Text(
+                                text = item.title,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 2,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        })
+                }
             }
             if (pagingItems.loadState.append is LoadState.Loading) {
                 item {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        contentAlignment = Alignment.Center
+                            .height(50.dp), contentAlignment = Alignment.Center
                     ) {
                         Text(text = "加载中...")
                     }
@@ -169,8 +213,7 @@ fun Carousel(imgList: List<BannerItemBean>) {
     //观察pagerState.settledPage，已确保滚动结束再进行下一次自动轮播
     LaunchedEffect(pagerState.settledPage) {
         delay(3000)
-        val scroller =
-            if (pagerState.currentPage + 1 == imgList.size) 0 else pagerState.currentPage + 1
+        val scroller = if (pagerState.currentPage + 1 == imgList.size) 0 else pagerState.currentPage + 1
         pagerState.animateScrollToPage(scroller)
     }
 
@@ -186,9 +229,7 @@ fun Carousel(imgList: List<BannerItemBean>) {
         ) { index ->
             //激活项的缩放过渡
             val imgScale by animateFloatAsState(
-                targetValue = if (nowPageIndex == index) 1f else 0.8f,
-                animationSpec = tween(300),
-                label = ""
+                targetValue = if (nowPageIndex == index) 1f else 0.8f, animationSpec = tween(300), label = ""
             )
             //使用Coil加载网络图片
             AsyncImage(
@@ -199,8 +240,8 @@ fun Carousel(imgList: List<BannerItemBean>) {
                         RoundedCornerShape(10.dp) //轮播图圆角裁剪
                     )
                     .background(Color.Gray),
-                model = ImageRequest.Builder(LocalContext.current).data(imgList[index].imagePath)
-                    .scale(Scale.FIT).build(),
+                model = ImageRequest.Builder(LocalContext.current).data(imgList[index].imagePath).scale(Scale.FIT)
+                    .build(),
                 contentDescription = "图片$index",
                 contentScale = ContentScale.FillBounds
             )
@@ -210,21 +251,22 @@ fun Carousel(imgList: List<BannerItemBean>) {
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp), horizontalArrangement = Arrangement.Center
+                .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerState.pageCount) { iteration ->
-                val color =
-                    if (pagerState.currentPage == iteration) Color.LightGray else Color.DarkGray
-                Box(modifier = Modifier
-                    .padding(2.dp)
-                    .clip(CircleShape)
-                    .background(color)
-                    .size(8.dp)
-                    .clickable {
-                        scope.launch {
-                            pagerState.animateScrollToPage(iteration)
-                        }
-                    })
+                val color = if (pagerState.currentPage == iteration) Color.LightGray else Color.DarkGray
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .size(8.dp)
+                        .clickable {
+                            scope.launch {
+                                pagerState.animateScrollToPage(iteration)
+                            }
+                        })
             }
         }
     }
@@ -236,12 +278,10 @@ fun ListToTopButton(onClick: () -> Unit) {
         SmallFloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(15.dp),
-            onClick = onClick
+                .padding(15.dp), onClick = onClick
         ) {
             Icon(
-                painter = painterResource(R.drawable.vertical_align_top_24px),
-                contentDescription = ""
+                painter = painterResource(R.drawable.vertical_align_top_24px), contentDescription = ""
             )
         }
     }

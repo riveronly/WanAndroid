@@ -71,9 +71,10 @@ class MainActivity : ComponentActivity() {
         val title: String,
         @DrawableRes val iconResNormal: Int,
         @DrawableRes val iconResFill: Int,
+        val isEnable: Boolean = true,
     ) {
         Home("首页", R.drawable.home_24px, R.drawable.home_fill_24px),
-        Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px),
+        Plaza("广场", R.drawable.dashboard_24px, R.drawable.dashboard_fill_24px, false),
         Mine("我的", R.drawable.face_24px, R.drawable.face_fill_24px),
     }
 
@@ -95,6 +96,9 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         NavigationBar {
                             Tab.entries.forEachIndexed { index, tab ->
+                                if (!tab.isEnable) {
+                                    return@forEachIndexed
+                                }
                                 val isSelected = currentPagerIndex == index
                                 NavigationBarItem(
                                     label = { Text(tab.title) },
