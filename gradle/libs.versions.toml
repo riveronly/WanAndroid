@@ -11,6 +11,7 @@ androidxDatastore = "1.1.1"
 androidxSplash = "1.0.1"
 kotlin = "2.0.20"
 kotlinxCoroutines = "1.7.1"
+matisse = "2.1.1"
 retrofit = "2.11.0"
 pagingCompose = "3.3.2"
 coilCompose = "2.7.0"
@@ -35,6 +36,7 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidxDatastore" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxCoroutines" }
+github-matisse = { module = "io.github.leavesczy:matisse", version.ref = "matisse" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 

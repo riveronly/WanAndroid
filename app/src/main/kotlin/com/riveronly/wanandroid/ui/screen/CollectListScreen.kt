@@ -85,7 +85,7 @@ fun CollectListScreen() {
                 ListItem(
                     modifier = Modifier.clickable {
                         val intent = Intent(view.context, ScreenActivity::class.java)
-                        intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
+                        intent.putExtra(SCREEN_NAME, Screens.ArticleDetail.route)
                         intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
                         startActivityLauncher.launch(intent)
                     },

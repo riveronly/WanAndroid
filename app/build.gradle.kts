@@ -123,4 +123,5 @@ dependencies {
     implementation(libs.retrofit.serialization)
     implementation(libs.kotlinx.serialization)
     implementation(libs.coil.compose)
+    implementation(libs.github.matisse)
 }

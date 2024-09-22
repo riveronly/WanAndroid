@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -112,69 +111,58 @@ fun HomeScreen() {
             }
             items(pagingItems.itemCount) {
                 val item = pagingItems[it] ?: return@items
-                val paddingSurface = 10.dp
-                Surface(
-                    modifier = Modifier.padding(
-                        start = paddingSurface,
-                        end = paddingSurface,
-                        top = if (it == 0) paddingSurface else 0.dp,
-                        bottom = paddingSurface
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
-                ) {
-                    ListItem(
-                        modifier = Modifier
-                            .clickable {
-                                val intent = Intent(view.context, ScreenActivity::class.java)
-                                intent.putExtra(SCREEN_NAME, Screens.ArticleWebView.route)
-                                intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
-                                startActivityLauncher.launch(intent)
-                            }, overlineContent = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .padding(end = 5.dp)
-                                        .size(24.dp),
-                                    painter = painterResource(id = R.drawable.face_24px),
-                                    contentDescription = "",
-                                    tint = Color.Black
-                                )
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Column {
-                                        Text(
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.SemiBold,
-                                            text = item.author.takeIf { author -> author.isNotBlank() }
-                                                ?: item.shareUser)
-                                        Text(text = item.niceShareDate)
-                                    }
-                                    Text(
-                                        modifier = Modifier
-                                            .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
-                                            .padding(vertical = 1.dp)
-                                            .width(50.dp),
-                                        text = item.superChapterName,
-                                        textAlign = TextAlign.Center,
-                                    )
-                                }
-
-                            }
-                        }, headlineContent = {
-                            Text(
-                                text = item.title,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 2,
-                                fontWeight = FontWeight.Bold,
+                ListItem(
+                    modifier = Modifier
+                        .clickable {
+                            val intent = Intent(view.context, ScreenActivity::class.java)
+                            intent.putExtra(SCREEN_NAME, Screens.ArticleDetail.route)
+                            intent.putExtra(ARTICLE_BEAN, Json.encodeToString(item))
+                            startActivityLauncher.launch(intent)
+                        }, overlineContent = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .padding(end = 5.dp)
+                                    .size(24.dp),
+                                painter = painterResource(id = R.drawable.face_24px),
+                                contentDescription = "",
+                                tint = Color.Black
                             )
-                        })
-                }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        text = item.author.takeIf { author -> author.isNotBlank() }
+                                            ?: item.shareUser)
+                                    Text(text = item.niceShareDate)
+                                }
+                                Text(
+                                    modifier = Modifier
+                                        .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
+                                        .padding(vertical = 1.dp)
+                                        .width(50.dp),
+                                    text = item.superChapterName,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+
+                        }
+                    }, headlineContent = {
+                        Text(
+                            text = item.title,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    })
+                HorizontalDivider()
             }
             if (pagingItems.loadState.append is LoadState.Loading) {
                 item {

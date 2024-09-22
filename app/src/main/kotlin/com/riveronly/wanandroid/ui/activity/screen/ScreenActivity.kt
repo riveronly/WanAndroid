@@ -10,9 +10,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.riveronly.wanandroid.bean.ArticleListBean
-import com.riveronly.wanandroid.ui.screen.ArticleWebViewScreen
 import com.riveronly.wanandroid.ui.screen.CollectListScreen
 import com.riveronly.wanandroid.ui.screen.SettingScreen
+import com.riveronly.wanandroid.ui.screen.WebViewScreen
 import com.riveronly.wanandroid.ui.theme.WanAndroidTheme
 import kotlinx.serialization.json.Json
 
@@ -21,7 +21,7 @@ const val ARTICLE_BEAN = "articleBean"
 
 enum class Screens(val route: String) {
     Setting("设置"),
-    ArticleWebView("文章详情"),
+    ArticleDetail("文章详情"),
     CollectList("我的收藏"),
 }
 
@@ -49,8 +49,8 @@ class ScreenActivity : ComponentActivity() {
                         composable(Screens.Setting.route) {
                             SettingScreen()
                         }
-                        composable(Screens.ArticleWebView.route) {
-                            ArticleWebViewScreen(articleBean)
+                        composable(Screens.ArticleDetail.route) {
+                            WebViewScreen(articleBean)
                         }
                         composable(Screens.CollectList.route) {
                             CollectListScreen()

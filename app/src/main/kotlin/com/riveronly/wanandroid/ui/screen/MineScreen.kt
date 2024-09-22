@@ -32,6 +32,7 @@ import com.riveronly.wanandroid.ui.activity.screen.SCREEN_NAME
 import com.riveronly.wanandroid.ui.activity.screen.ScreenActivity
 import com.riveronly.wanandroid.ui.activity.screen.Screens
 import com.riveronly.wanandroid.ui.modal.toast
+import github.leavesczy.matisse.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -76,7 +77,25 @@ fun MineScreen() {
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
     val minAnimationDuration = 1000L
-    PullToRefreshBox(isRefreshing,
+    val mediaPickerLauncher =
+        rememberLauncherForActivityResult(contract = MatisseContract()) { result: List<MediaResource>? ->
+            if (!result.isNullOrEmpty()) {
+                val mediaResource = result[0]
+                val uri = mediaResource.uri
+                val path = mediaResource.path
+                val name = mediaResource.name
+                val mimeType = mediaResource.mimeType
+            }
+        }
+
+    val matisse = Matisse(
+        maxSelectable = 1,
+        imageEngine = GlideImageEngine(),
+        mediaType = MediaType.ImageOnly
+    )
+
+    PullToRefreshBox(
+        isRefreshing,
         state = pullToRefreshState,
         onRefresh = {
             scope.launch {
@@ -97,26 +116,14 @@ fun MineScreen() {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
-                        if (viewModel.userInfoRes.userInfo.id == 0) {
-                            val intent = Intent(context, LoginActivity::class.java)
-                            startActivityLauncher.launch(intent)
-                        } else {
-                            scope.launch {
-                                viewModel
-                                    .fetchCoin()
-                                    .collect {
-                                        if (it) {
-                                            view.toast("签到成功")
-                                        }
-                                    }
-                            }
-                        }
+                        mediaPickerLauncher.launch(matisse)
                     }
                     .padding(10.dp)) {
                 Icon(
@@ -138,6 +145,28 @@ fun MineScreen() {
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
+                ListItem(
+                    headlineContent = {
+                        Text(text = "今日签到")
+                    },
+                    modifier = Modifier.clickable {
+                        if (viewModel.userInfoRes.userInfo.id == 0) {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivityLauncher.launch(intent)
+                        } else {
+                            scope.launch {
+                                viewModel
+                                    .fetchCoin()
+                                    .collect {
+                                        if (it) {
+                                            view.toast("签到成功")
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                )
+                HorizontalDivider()
                 ListItem(
                     headlineContent = {
                         Text(text = "我的积分")

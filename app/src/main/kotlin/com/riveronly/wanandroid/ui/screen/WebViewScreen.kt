@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleWebViewScreen(articleBean: ArticleListBean.Data) {
+fun WebViewScreen(articleBean: ArticleListBean.Data) {
     var article by remember { mutableStateOf(articleBean) }
     val view = LocalView.current
     val loadingView = view.loadingModal()
