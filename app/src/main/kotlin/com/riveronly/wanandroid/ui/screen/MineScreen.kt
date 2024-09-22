@@ -90,7 +90,7 @@ fun MineScreen() {
 
     val matisse = Matisse(
         maxSelectable = 1,
-        imageEngine = GlideImageEngine(),
+        imageEngine = CoilImageEngine(),
         mediaType = MediaType.ImageOnly
     )
 
@@ -123,7 +123,12 @@ fun MineScreen() {
                     .height(100.dp)
                     .background(MaterialTheme.colorScheme.primary)
                     .clickable {
-                        mediaPickerLauncher.launch(matisse)
+                        if (viewModel.userInfoRes.userInfo.id == 0) {
+                            val intent = Intent(context, LoginActivity::class.java)
+                            startActivityLauncher.launch(intent)
+                        } else {
+                            mediaPickerLauncher.launch(matisse)
+                        }
                     }
                     .padding(10.dp)) {
                 Icon(
