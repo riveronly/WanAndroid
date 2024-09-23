@@ -91,6 +91,7 @@
             tools:ignore="DataExtractionRules">
         <activity
                 android:name=".MainActivity"
+                android:configChanges="keyboard|keyboardHidden|screenSize|fontScale|density|orientation|uiMode"
                 android:exported="true"
                 android:theme="@style/Theme.AppSplashScreen">
             <intent-filter>
